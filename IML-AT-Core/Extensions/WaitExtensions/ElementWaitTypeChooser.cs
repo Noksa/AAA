@@ -8,14 +8,11 @@ using OpenQA.Selenium;
 
 namespace IML_AT_Core.Extensions.WaitExtensions
 {
-    public class ElementWaitTypeChooser : IElementWaitTypeChooser
+    public class ElementWaitTypeChooser : BaseWaitTypeChooser<IWebElement>, IElementWaitTypeChooser
     {
-        private readonly IWebElement _element;
-        private readonly TimeSpan _timespan;
-        public ElementWaitTypeChooser(IWebElement element, TimeSpan timespan)
+        public ElementWaitTypeChooser(IWebElement element, TimeSpan timespan) : base(element, timespan)
         {
-            _element = element;
-            _timespan = timespan;
+            
         }
     }
 }
