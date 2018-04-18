@@ -14,5 +14,6 @@ namespace IML_AT_Core.Extensions.WaitExtensions.Interfaces
         void UrlMatches(string regex);
         void ReadyStateComplete();
         void TitleContain(string title, bool ignoreCase = false);
+        void LoaderDissapear();
     }
 }
