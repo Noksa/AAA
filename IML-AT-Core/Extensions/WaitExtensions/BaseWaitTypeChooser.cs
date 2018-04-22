@@ -1,55 +1,45 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using IML_AT_Core.Core;
+using System.Linq.Expressions;
 using IML_AT_Core.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 
 namespace IML_AT_Core.Extensions.WaitExtensions
 {
-    public abstract class BaseWaitTypeChooser<T> : IWaitUntil<T>
+    public class BaseWaitTypeChooser<T> : IWaitUntil<T>
     {
-        protected TimeSpan TimeSpan { get; set; }
-        protected T Obj { get; set; }
-        protected BaseWaitTypeChooser(T obj, TimeSpan timespan = default(TimeSpan))
+        public TimeSpan TimeSpan { get; set; }
+        public T Obj { get; set; }
+
+        public BaseWaitTypeChooser(T obj, TimeSpan timespan = default(TimeSpan))
         {
             TimeSpan = timespan;
             Obj = obj;
         }
 
-        public TResult Until<TResult>(Func<TResult> func)
+        public TResult Until<TResult>(Expression<Func<TResult>> func)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            while (stopwatch.Elapsed <= TimeSpan)
-            {
-                try
-                {
-                    return func();
-                }
-                catch (NullReferenceException ex)
-                {
-                    throw new NullReferenceException(ex.Message);
-                }
-                catch (Exception)
-                {
-                    Thread.Sleep(500);
-                }
-
-            }
-            throw new WebDriverTimeoutException();
+            return Until(_ => func.Compile()());
         }
 
-        public TResult Until<TResult>(Func<T, TResult> func)
+        public TResult Until<TResult>(Expression<Func<T, TResult>> func)
         {
+            var resultType = typeof(TResult);
             var stopwatch = new Stopwatch();
+            var methodCall = func.Body as MethodCallExpression;
             stopwatch.Start();
             while (stopwatch.Elapsed <= TimeSpan)
             {
                 try
                 {
-                    return func(Obj);
+                    var result = func.Compile()(Obj);
+                    if (resultType == typeof(bool))
+                    {
+                        var boolResult = result as bool?;
+                        if (boolResult.HasValue && boolResult.Value) return result;
+                    }
+                    else return result;
                 }
                 catch (NullReferenceException ex)
                 {
@@ -59,9 +49,12 @@ namespace IML_AT_Core.Extensions.WaitExtensions
                 {
                     Thread.Sleep(500);
                 }
-
             }
-            throw new WebDriverTimeoutException();
+
+            throw new WebDriverTimeoutException($"Timed out after {TimeSpan.TotalSeconds} seconds." +
+                                                $"\n\nCaused in class: {methodCall.Method.DeclaringType.Name}" +
+                                                $"\nMethodName: {methodCall.Method.Name}" +
+                                                $"\nParameters: {string.Join(", ", methodCall.Arguments)}");
         }
     }
 }

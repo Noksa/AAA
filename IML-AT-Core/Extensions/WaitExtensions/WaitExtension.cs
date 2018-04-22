@@ -1,30 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IML_AT_Core.Core;
+using System.Threading;
 using IML_AT_Core.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
 
 namespace IML_AT_Core.Extensions.WaitExtensions
+
 {
     public static class WaitExtension
     {
-        public static IElementWaitTypeChooser Wait(this IWebElement element, TimeSpan timespan = default (TimeSpan))
+        internal static ThreadLocal<TimeSpan> Timespan = new ThreadLocal<TimeSpan>();
+
+        public static IWaitUntil<IWebElement> Wait(this IWebElement element, TimeSpan timespan = default(TimeSpan))
         {
-            return new ElementWaitTypeChooser(element, timespan);
+            Timespan.Value = timespan;
+            return new BaseWaitTypeChooser<IWebElement>(element, timespan);
         }
 
-
-
-        public static IDriverWaitTypeChooser Wait(this IWebDriver driver, TimeSpan timespan = default (TimeSpan))
+        public static IWaitUntil<IWebDriver> Wait(this IWebDriver driver, TimeSpan timespan = default(TimeSpan))
         {
-            return new DriverWaitTypeChooser(driver, timespan);
+            Timespan.Value = timespan;
+            return new BaseWaitTypeChooser<IWebDriver>(driver, timespan);
+        }
+    }
+
+    public static class ElementWaitExtension
+    {
+        public static bool Exists(this IWebElement element)
+        {
+            return element.Displayed;
+        }
+    }
+
+
+    public static class DriverWaitExtension
+    {
+        public static IPageWaitConditions Page(this IWebDriver driver)
+        {
+            return new PageWaitConditions(driver, WaitExtension.Timespan.Value);
         }
     }
 }
-
-
-
-
