@@ -54,9 +54,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\BaseTestConfig.cs" />
+    <Compile Include="TestBaseClasses\BasePage.cs" />
+    <Compile Include="TestBaseClasses\BaseTestConfig.cs" />
     <Compile Include="Core\BrowserTypes.cs" />
     <Compile Include="Core\DriverFactory.cs" />
+    <Compile Include="Decorators\LoggingWebElement.cs" />
     <Compile Include="Extensions\WaitExtensions\BaseWaitTypeChooser.cs" />
     <Compile Include="Extensions\WaitExtensions\Interfaces\IPageWaitConditions.cs" />
     <Compile Include="Extensions\WaitExtensions\Interfaces\IWaitUntil{T}.cs" />

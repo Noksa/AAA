@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
+using IML_AT_Core.Core;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 
-namespace IML_AT_Core.Core
+namespace IML_AT_Core.TestBaseClasses
 {
     public abstract class BaseTestConfig
     {
@@ -34,9 +36,10 @@ namespace IML_AT_Core.Core
             {
                 if (TestContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Passed) return;
                 var timestamp = DateTime.Now.ToString("dd-MM-yyyy-hhmmss");
+                var pathToFile = Path.Combine(TestContext.TestDirectory, TestContext.Test.MethodName + "-" + TestContext.Test.ID, timestamp);
                 DriverFactory.GetDriver().TakeScreenshot()
-                    .SaveAsFile($"C:\\Temp\\{timestamp}.png", ScreenshotImageFormat.Png);
-                TestContext.AddTestAttachment($"C:\\Temp\\{timestamp}.png");
+                    .SaveAsFile(pathToFile + ".png", ScreenshotImageFormat.Png);
+                TestContext.AddTestAttachment(pathToFile + ".png");
             }
             finally
             {
