@@ -15,91 +15,49 @@ namespace IML_AT_Core.Core
 {
     public abstract class DriverFactory
     {
-        private static ThreadLocal<IWebDriver> _driver;
+        private static readonly ThreadLocal<IWebDriver> Driver = new ThreadLocal<IWebDriver>();
         public static IWebDriver GetDriver()
         {
-            if (!_driver.IsValueCreated)
+            if (!Driver.IsValueCreated)
                 throw new NullReferenceException(
                     "Драйвер не был инициализирован. Проинициализируйте драйвер перед его использованием, путём вызова метода DriverFactory.InitDriver(driverType)");
-            return _driver.Value;
+            return Driver.Value;
         }
 
 
         public static void InitDriver(Browser browserType)
-        {if (_driver == null) _driver = new ThreadLocal<IWebDriver>();
+        {
             switch (browserType)
-
             {
                 case Browser.chrome:
-
-                    _driver.Value = new ChromeDriver();
-
+                    Driver.Value = new ChromeDriver();
                     break;
-
                 case Browser.firefox:
-
-                    _driver.Value = new FirefoxDriver();
-
+                    Driver.Value = new FirefoxDriver();
                     break;
-
                 case Browser.ie:
-
-                    _driver.Value = new InternetExplorerDriver();
-
+                    Driver.Value = new InternetExplorerDriver();
                     break;
-
                 case Browser.safari:
-
-                    _driver.Value = new SafariDriver();
-
+                    Driver.Value = new SafariDriver();
                     break;
-
                 case Browser.opera:
-
-                    _driver.Value = new OperaDriver();
-
+                    Driver.Value = new OperaDriver();
                     break;
-
                 default:
-
                     throw new ArgumentNullException("Неизвестный тип драйвера \"" + browserType +
                                                     "\". Невозможно проинициализировать драйвер.");
             }
-
-
-            _driver.Value.Manage().Window.Maximize();
-
-            _driver.Value.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-
-            var firingDriver = new EventFiringWebDriver(_driver.Value);
-
-            _driver.Value = firingDriver;
-
-            firingDriver.ExceptionThrown += FiringDriver_ExceptionThrown;
-        }
-
-
-        private static void FiringDriver_ExceptionThrown(object sender, WebDriverExceptionEventArgs e)
-
-        {
-            // string timestamp = DateTime.Now.ToString("dd-MM-yyyy-hhmmss");
-
-            //   _driver.Value.TakeScreenshot().SaveAsFile(timestamp + ".png", ScreenshotImageFormat.Png);
+            Driver.Value.Manage().Window.Maximize();
+            Driver.Value.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
         }
 
 
         public static void Dispose()
-
         {
-            if (_driver.Value == null && _driver == null) return;
-
-            _driver.Value.Quit();
-
-            _driver.Value = null;
-
-            _driver.Dispose();
-
-            _driver = null;
+            if (Driver.Value == null) return;
+            Driver.Value.Quit();
+            Driver.Value = null;
         }
     }
 }

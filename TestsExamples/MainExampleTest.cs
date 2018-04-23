@@ -1,28 +1,35 @@
-﻿using System;
-using IML_AT_Core.Core;
-using IML_AT_Core.Extensions.WaitExtensions;
+﻿using Allure.Commons;
 using IML_AT_Core.TestBaseClasses;
+using NUnit.Allure.Attributes;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
-using OpenQA.Selenium;
 using TestsExamples.Pages;
 
 namespace TestsExamples
 {
+    [TestFixture]
+    [AllureFixture("Test")]
     public class MainExampleTest : BaseTestConfig
     {
-       [TestCase("Тест")]
-       [TestCase("Оля привет!")]
-       [TestCase("Зашли?")]
-       [TestCase("Не верный логин или пароль!")]
-        public void TestBadLogin(string text)
+
+        private const string ErrorMsg = "Не верный 6логин или паро1ль!";
+
+        [Parallelizable(ParallelScope.Children)]
+        [TestCase("Ru", "Ru")]
+        //[TestCase("Ру", "Ру")]
+        //[TestCase(" ", " ")]
+        //[TestCase(" ", "")]
+        [AllureTest("Вход в личный кабинет")]
+        [AllureSeverity(SeverityLevel.Blocker)]
+        [AllureStory("Негативные сценарии")]
+        public void TestBadLogin(string login, string password)
         {
             var mainPage = new MainPage();
             var loginPage = mainPage.ClickOnLoginButton();
-            loginPage.TypeLoginAndPassword("Test", "Hello");
+            loginPage.TypeLoginAndPassword(login, password);
             loginPage.ClickEnterButton();
-            loginPage.CheckErrorMsg(text);
-
+            loginPage.CheckErrorMsg(ErrorMsg);
         }
     }
 }
+
+

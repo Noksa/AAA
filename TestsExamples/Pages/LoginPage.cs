@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Allure.Commons;
 using IML_AT_Core.Core;
 using IML_AT_Core.TestBaseClasses;
 using NUnit.Framework;
@@ -29,21 +30,25 @@ namespace TestsExamples.Pages
         {
             PageFactory.InitElements(DriverFactory.GetDriver(), this);
         }
+        
 
         public void TypeLoginAndPassword(string login, string password)
         {
-            this.login.SendKeys(login);
-            this.password.SendKeys(password);
+            StepRunner.Run("Заполняем поле логин и пароль", () =>
+            {
+                this.login.SendKeys(login);
+                this.password.SendKeys(password);
+            });
         }
 
         public void ClickEnterButton()
         {
-            enterButton.Click();
+            StepRunner.Run("Нажимаем кнопку \"Войти\"", () => enterButton.Click());
         }
 
         public void CheckErrorMsg(string expectedText)
         {
-           Assert.True(errorMsg.Text == expectedText, $"Текст ошибки не соответствует ожидаемому. Ожидали: \"{expectedText}\". Фактически: \"{errorMsg.Text}\"");
+           Assert.AreSame(errorMsg.Text, expectedText, $"Текст ошибки не соответствует ожидаемому.");
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IML_AT_Core.Core;
+using IML_AT_Core.Core.Interfaces;
 using IML_AT_Core.TestBaseClasses;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
@@ -17,7 +18,7 @@ namespace TestsExamples.Pages
 
         public LoginPage ClickOnLoginButton()
         {
-            loginButton.Click();
+            StepRunner.Run("Нажимаем на кнопку входа", () => loginButton.Click());
             return new LoginPage();
         }
 
@@ -25,5 +26,6 @@ namespace TestsExamples.Pages
         {
            PageFactory.InitElements(DriverFactory.GetDriver(), this);
         }
+        
     }
 }

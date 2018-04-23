@@ -32,19 +32,7 @@ namespace IML_AT_Core.TestBaseClasses
         [TearDown]
         public virtual void TearDown()
         {
-            try
-            {
-                if (TestContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Passed) return;
-                var timestamp = DateTime.Now.ToString("dd-MM-yyyy-hhmmss");
-                var pathToFile = Path.Combine(TestContext.TestDirectory, TestContext.Test.MethodName + "-" + TestContext.Test.ID, timestamp);
-                DriverFactory.GetDriver().TakeScreenshot()
-                    .SaveAsFile(pathToFile + ".png", ScreenshotImageFormat.Png);
-                TestContext.AddTestAttachment(pathToFile + ".png");
-            }
-            finally
-            {
-                DriverFactory.Dispose();
-            }
+            DriverFactory.Dispose();
         }
     }
 }
