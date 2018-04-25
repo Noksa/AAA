@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Allure.Commons;
 using IML_AT_Core.Core;
+using IML_AT_Core.CustomElements.Elements;
 using IML_AT_Core.TestBaseClasses;
 using NUnit.Framework;
 using OpenQA.Selenium;
@@ -21,15 +22,11 @@ namespace TestsExamples.Pages
         private IWebElement password;
 
         [FindsBy(How = How.Id, Using = "Button1")]
-        private IWebElement enterButton;
+        private ImlButton enterButton;
 
         [FindsBy(How = How.Id, Using = "errorMsg")]
         private IWebElement errorMsg;
-
-        public LoginPage()
-        {
-            PageFactory.InitElements(DriverFactory.GetDriver(), this);
-        }
+        
         
 
         public void TypeLoginAndPassword(string login, string password)

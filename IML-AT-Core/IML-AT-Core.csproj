@@ -65,11 +65,14 @@
   <ItemGroup>
     <Compile Include="Core\Interfaces\IStepBody.cs" />
     <Compile Include="Core\StepRunner.cs" />
+    <Compile Include="CustomElements\Attributes\ElementTitleAttribute.cs" />
+    <Compile Include="CustomElements\CustomElement.cs" />
+    <Compile Include="CustomElements\Elements\ImlButton.cs" />
+    <Compile Include="Decorators\ExtendedFieldDecorator.cs" />
     <Compile Include="TestBaseClasses\BasePage.cs" />
     <Compile Include="TestBaseClasses\BaseTestConfig.cs" />
     <Compile Include="Core\BrowserTypes.cs" />
     <Compile Include="Core\DriverFactory.cs" />
-    <Compile Include="Decorators\LoggingWebElement.cs" />
     <Compile Include="Extensions\WaitExtensions\BaseWaitTypeChooser.cs" />
     <Compile Include="Extensions\WaitExtensions\Interfaces\IPageWaitConditions.cs" />
     <Compile Include="Extensions\WaitExtensions\Interfaces\IWaitUntil{T}.cs" />
