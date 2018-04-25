@@ -5,47 +5,51 @@ using System.Text;
 using System.Threading.Tasks;
 using Allure.Commons;
 using IML_AT_Core.Core;
+using IML_AT_Core.CustomElements.Attributes;
 using IML_AT_Core.CustomElements.Elements;
 using IML_AT_Core.TestBaseClasses;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
+// ReSharper disable InconsistentNaming
 
 namespace TestsExamples.Pages
 {
     public class LoginPage : BasePage
     {
         [FindsBy(How = How.Id, Using = "txtUser")]
-        private IWebElement login;
+        [ElementTitle("Логин")]
+        private ImlTextInput login;
 
         [FindsBy(How = How.Id, Using = "txtPass")]
-        private IWebElement password;
+        [ElementTitle("Пароль")]
+        private ImlTextInput password;
 
         [FindsBy(How = How.Id, Using = "Button1")]
+        [ElementTitle("Войти")]
         private ImlButton enterButton;
 
         [FindsBy(How = How.Id, Using = "errorMsg")]
-        private IWebElement errorMsg;
+        [ElementTitle("Текст ошибки")]
+        private ImlTextLabel errorMsg;
         
         
 
         public void TypeLoginAndPassword(string login, string password)
         {
-            StepRunner.Run("Заполняем поле логин и пароль", () =>
-            {
-                this.login.SendKeys(login);
-                this.password.SendKeys(password);
-            });
+            this.login.SendKeys(login);
+            this.password.SendKeys(password);
+           
         }
 
         public void ClickEnterButton()
         {
-            StepRunner.Run("Нажимаем кнопку \"Войти\"", () => enterButton.Click());
+            enterButton.Click();
         }
 
         public void CheckErrorMsg(string expectedText)
         {
-           Assert.AreSame(errorMsg.Text, expectedText, $"Текст ошибки не соответствует ожидаемому.");
+           StepRunner.Run("Проверка сообщения ошибки", () => Assert.AreEqual(errorMsg.Text, expectedText, $"Текст ошибки не соответствует ожидаемому."));
         }
     }
 }

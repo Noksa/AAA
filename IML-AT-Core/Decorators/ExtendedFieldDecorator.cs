@@ -35,21 +35,24 @@ namespace IML_AT_Core.Decorators
                 hasPropertySet = property.CanWrite;
                 targetType = property.PropertyType;
             }
-
+            
             if (field == null & (property == null || !hasPropertySet))
             {
                 return null;
             }
-
+            var cache = ShouldCacheLookup(member);
+            IList<By> bys = CreateLocatorList(member);
+            if (bys.Count <= 0) return null;
+            if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(ImlList<>))
+            {
+                return Activator.CreateInstance(targetType, locator, bys, cache);
+            }
             if (!(targetType.BaseType == typeof(CustomElement)))
             {
                 throw new NotImplementedException(
-                    $"Элемент {member.Name} не наследует класс CustomElement, и не может быть декорирован по этой причине.");
+                    $"Элемент \"{member.DeclaringType}.{member.Name}\" не наследует класс CustomElement, и не может быть декорирован.\nНаследуйтесь от CustomElement для возможности декорирования.");
             }
-
-            IList<By> bys = CreateLocatorList(member);
-            if (bys.Count <= 0) return null;
-            var cache = ShouldCacheLookup(member);
+            
             var wrapper = Activator.CreateInstance(targetType, locator, bys, cache, elementTitle);
             return wrapper;
         }

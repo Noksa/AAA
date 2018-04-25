@@ -11,13 +11,13 @@ namespace TestsExamples
     public class MainExampleTest : BaseTestConfig
     {
 
-        private const string ErrorMsg = "Не верный 6логин или паро1ль!";
+        private const string ErrorMsg = "Не верный логин или пароль!";
 
         [Parallelizable(ParallelScope.Children)]
         [TestCase("Ru", "Ru")]
-        //[TestCase("Ру", "Ру")]
-        //[TestCase(" ", " ")]
-        //[TestCase(" ", "")]
+        [TestCase("Ру", "Ру")]
+        [TestCase(" ", " ")]
+        [TestCase(" ", "")]
         [AllureTest("Вход в личный кабинет")]
         [AllureSeverity(SeverityLevel.Blocker)]
         [AllureStory("Негативные сценарии")]

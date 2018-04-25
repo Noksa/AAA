@@ -14,7 +14,7 @@ namespace IML_AT_Core.Core
         public static string StepName { get; set; }
         private static readonly ThreadLocal<string> Uuid = new ThreadLocal<string>();
 
-        public static void Run(string stepName, params Action[] stepBody)
+        public static void Run(string stepName, Action stepBody)
         {
             StepName = stepName;
             Uuid.Value = Guid.NewGuid().ToString("N");
@@ -25,40 +25,33 @@ namespace IML_AT_Core.Core
             };
             AllureLifecycle.Instance.StartStep(Uuid.Value, stepResult);
 
-            foreach (var action in stepBody)
+            try
             {
-                try
-                {
-                    action();
-                    AllureLifecycle.Instance.UpdateStep(Uuid.Value, result =>
-                    {
-                        result.status = Status.passed;
-                    });
-                }
-                catch (Exception)
-                {
-                    var timestamp = DateTime.Now.ToString("dd-MM-yyyy-hhmmss");
-                    var pathToFile = Path.Combine(TestContext.CurrentContext.TestDirectory,
-                        TestContext.CurrentContext.Test.ID + "-" + timestamp + ".png");
-                    DriverFactory.GetDriver().TakeScreenshot()
-                        .SaveAsFile(pathToFile, ScreenshotImageFormat.Png);
-                    var attachment = new Attachment
-                    {
-                        type = "image/png",
-                        source = pathToFile
-                    };
-                    AllureLifecycle.Instance.UpdateStep(Uuid.Value, result =>
-                    {
-                        result.attachments.Add(attachment);
-                    });
-                }
-                finally
-                {
-                    AllureLifecycle.Instance.StopStep(Uuid.Value);
-                }
+                stepBody();
+                AllureLifecycle.Instance.UpdateStep(Uuid.Value, result => { result.status = Status.passed; });
             }
+            catch (Exception)
+            {
+                var timestamp = DateTime.Now.ToString("dd-MM-yyyy-hhmmss");
+                var pathToFile = Path.Combine(TestContext.CurrentContext.TestDirectory,
+                    TestContext.CurrentContext.Test.ID + "-" + timestamp + ".png");
+                DriverFactory.GetDriver().TakeScreenshot()
+                    .SaveAsFile(pathToFile, ScreenshotImageFormat.Png);
+                var attachment = new Attachment
+                {
+                    type = "image/png",
+                    source = pathToFile
+                };
+                AllureLifecycle.Instance.UpdateStep(Uuid.Value, result => { result.attachments.Add(attachment); });
+                throw;
+            }
+            finally
+            {
+                AllureLifecycle.Instance.StopStep(Uuid.Value);
+            }
+        }
 
     }
-    }
 }
+
 

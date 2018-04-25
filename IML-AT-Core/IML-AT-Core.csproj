@@ -68,6 +68,9 @@
     <Compile Include="CustomElements\Attributes\ElementTitleAttribute.cs" />
     <Compile Include="CustomElements\CustomElement.cs" />
     <Compile Include="CustomElements\Elements\ImlButton.cs" />
+    <Compile Include="CustomElements\Elements\ImlTextInput.cs" />
+    <Compile Include="CustomElements\Elements\ImlTextLabel.cs" />
+    <Compile Include="CustomElements\ImlList.cs" />
     <Compile Include="Decorators\ExtendedFieldDecorator.cs" />
     <Compile Include="TestBaseClasses\BasePage.cs" />
     <Compile Include="TestBaseClasses\BaseTestConfig.cs" />
