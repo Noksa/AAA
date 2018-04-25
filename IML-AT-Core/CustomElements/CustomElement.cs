@@ -59,7 +59,7 @@ namespace IML_AT_Core.CustomElements
 
         public void Clear()
         {
-            StepRunner.Run($"Очищаем элемент \"{NameOfElement}\"", () => WrappedElement.Clear());
+            StepRunner.Run($"Очищаем текст/значение у элемента \"{NameOfElement}\"", () => WrappedElement.Clear());
         }
 
         public void Click()
@@ -94,7 +94,7 @@ namespace IML_AT_Core.CustomElements
 
         public void SendKeys(string text)
         {
-            StepRunner.Run($"Заполняем текст у элемента \"{NameOfElement}\"", () => WrappedElement.SendKeys(text));
+            StepRunner.Run($"Заполняем текст у элемента \"{NameOfElement}\" значением \"{text}\"", () => WrappedElement.SendKeys(text));
         }
 
         public void Submit()

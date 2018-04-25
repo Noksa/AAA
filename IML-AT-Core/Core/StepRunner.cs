@@ -13,6 +13,7 @@ namespace IML_AT_Core.Core
     {
         public static string StepName { get; set; }
         private static readonly ThreadLocal<string> Uuid = new ThreadLocal<string>();
+        private static string pathToFile;
 
         public static void Run(string stepName, Action stepBody)
         {
@@ -33,7 +34,7 @@ namespace IML_AT_Core.Core
             catch (Exception)
             {
                 var timestamp = DateTime.Now.ToString("dd-MM-yyyy-hhmmss");
-                var pathToFile = Path.Combine(TestContext.CurrentContext.TestDirectory,
+                pathToFile = Path.Combine(TestContext.CurrentContext.TestDirectory,
                     TestContext.CurrentContext.Test.ID + "-" + timestamp + ".png");
                 DriverFactory.GetDriver().TakeScreenshot()
                     .SaveAsFile(pathToFile, ScreenshotImageFormat.Png);
@@ -47,6 +48,7 @@ namespace IML_AT_Core.Core
             }
             finally
             {
+                if (File.Exists(pathToFile)) File.Delete(pathToFile);
                 AllureLifecycle.Instance.StopStep(Uuid.Value);
             }
         }
