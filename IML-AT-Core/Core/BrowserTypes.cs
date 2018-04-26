@@ -2,10 +2,10 @@
 {
     public enum Browser
     {
-        chrome,
-        ie,
-        firefox,
-        safari,
-        opera
+        Chrome,
+        Ie,
+        Firefox,
+        Safari,
+        Opera
     }
 }

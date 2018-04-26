@@ -33,7 +33,7 @@ namespace IML_AT_Core.CustomElements
             }
         }
 
-        private List<T> _list = null;
+        private List<T> _list;
 
         private List<T> List
         {

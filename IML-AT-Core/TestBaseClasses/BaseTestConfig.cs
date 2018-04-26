@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Configuration;
-using System.IO;
 using IML_AT_Core.Core;
+using IML_AT_Core.Helpers;
 using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.Extensions;
 
 namespace IML_AT_Core.TestBaseClasses
 {
@@ -17,7 +15,7 @@ namespace IML_AT_Core.TestBaseClasses
         [SetUp]
         public virtual void Setup()
         {
-            var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").ToLower(), out Browser);
+            var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
             if (!parsed)
                 throw new NullReferenceException(
                     "Не обранужен тип браузера в App.config!\nДобавьте тип браузера в файл конфигурации. Key: BrowserType");

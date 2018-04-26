@@ -1,35 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Allure.Commons;
-using IML_AT_Core.Core;
+﻿using IML_AT_Core.Core;
 using IML_AT_Core.CustomElements.Attributes;
 using IML_AT_Core.CustomElements.Elements;
 using IML_AT_Core.TestBaseClasses;
 using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.PageObjects;
-// ReSharper disable InconsistentNaming
 
 namespace TestsExamples.Pages
 {
     public class LoginPage : BasePage
     {
-        [FindsBy(How = How.Id, Using = "txtUser")]
+        [FindBy(Id = "txtUser")]
         [ElementTitle("Логин")]
         private ImlTextInput login;
 
-        [FindsBy(How = How.Id, Using = "txtPass")]
+        [FindBy(Id = "txtPass")]
         [ElementTitle("Пароль")]
         private ImlTextInput password;
 
-        [FindsBy(How = How.Id, Using = "Button1")]
+        [FindBy(Id = "Button1")]
         [ElementTitle("Войти")]
         private ImlButton enterButton;
 
-        [FindsBy(How = How.Id, Using = "errorMsg")]
+        [FindBy(Id = "errorMsg")]
         [ElementTitle("Текст ошибки")]
         private ImlTextLabel errorMsg;
         
@@ -49,7 +40,7 @@ namespace TestsExamples.Pages
 
         public void CheckErrorMsg(string expectedText)
         {
-           StepRunner.Run("Проверка сообщения ошибки", () => Assert.AreEqual(errorMsg.Text, expectedText, $"Текст ошибки не соответствует ожидаемому."));
+           StepRunner.Run("Ожидание появления ошибки и проверка текст ошибки", () => Assert.AreEqual(errorMsg.Text, expectedText, "Текст ошибки не соответствует ожидаемому."));
         }
     }
 }

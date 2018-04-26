@@ -63,15 +63,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Interfaces\IStepBody.cs" />
     <Compile Include="Core\StepRunner.cs" />
     <Compile Include="CustomElements\Attributes\ElementTitleAttribute.cs" />
-    <Compile Include="CustomElements\CustomElement.cs" />
+    <Compile Include="CustomElements\Attributes\FindByAttribute.cs" />
+    <Compile Include="CustomElements\Attributes\PageTitleAttribute.cs" />
+    <Compile Include="CustomElements\ImlBlockElement.cs" />
+    <Compile Include="CustomElements\ImlElement.cs" />
     <Compile Include="CustomElements\Elements\ImlButton.cs" />
     <Compile Include="CustomElements\Elements\ImlTextInput.cs" />
     <Compile Include="CustomElements\Elements\ImlTextLabel.cs" />
     <Compile Include="CustomElements\ImlList.cs" />
     <Compile Include="Decorators\ExtendedFieldDecorator.cs" />
+    <Compile Include="Helpers\StringExtension.cs" />
     <Compile Include="TestBaseClasses\BasePage.cs" />
     <Compile Include="TestBaseClasses\BaseTestConfig.cs" />
     <Compile Include="Core\BrowserTypes.cs" />

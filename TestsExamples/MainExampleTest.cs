@@ -7,7 +7,7 @@ using TestsExamples.Pages;
 namespace TestsExamples
 {
     [TestFixture]
-    [AllureFixture("Test")]
+    [AllureFixture("Вход в личный кабинет")]
     public class MainExampleTest : BaseTestConfig
     {
 
@@ -19,6 +19,7 @@ namespace TestsExamples
         [TestCase(" ", " ")]
         [TestCase(" ", "")]
         [AllureTest("Вход в личный кабинет")]
+        [AllureTag("Tag Tag")]
         [AllureSeverity(SeverityLevel.Blocker)]
         [AllureStory("Негативные сценарии")]
         public void TestBadLogin(string login, string password)

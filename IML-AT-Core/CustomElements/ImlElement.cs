@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace IML_AT_Core.CustomElements
 {
-    public class CustomElement : IWebElement
+    public class ImlElement : IWebElement
     {
         protected readonly IEnumerable<By> Bys;
         protected bool CacheLookup;
@@ -26,7 +26,7 @@ namespace IML_AT_Core.CustomElements
 
 
 
-        public CustomElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
+        public ImlElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
         {
             Bys = bys;
             CacheLookup = cache;
