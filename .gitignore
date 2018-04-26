@@ -32,9 +32,9 @@ bld/
 [Bb]uild[Ll]og.*
 
 # Allure test report
+allure-report
+allure-results
 
-/allure-report
-/allure-results
 # NUNIT
 *.VisualState.xml
 TestResult.xml
