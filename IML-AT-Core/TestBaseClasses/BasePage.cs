@@ -11,7 +11,7 @@ namespace IML_AT_Core.TestBaseClasses
         protected BasePage()
         {
             StepRunner.Run($"Инициализируется страница {GetPageName()}", () =>
-            PageFactory.InitElements(DriverFactory.GetDriver(), this, new ExtendedFieldDecorator()));
+            PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator()));
         }
 
 

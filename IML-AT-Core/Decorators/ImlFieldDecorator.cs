@@ -9,7 +9,7 @@ using IML_AT_Core.CustomElements.Attributes;
 
 namespace IML_AT_Core.Decorators
 {
-    public class ExtendedFieldDecorator : IPageObjectMemberDecorator
+    public class ImlFieldDecorator : IPageObjectMemberDecorator
     {
         public object Decorate(MemberInfo member, IElementLocator locator)
         {
