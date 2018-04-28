@@ -63,14 +63,6 @@ namespace SpecFlowTests
             testRunner.CollectScenarioErrors();
         }
         
-        public virtual void FeatureBackground()
-        {
-#line 3
-#line 4
-       testRunner.Given("Запускается браузер \"Chrome\" и открывается страница \"http://iml.ru\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Дано ");
-#line hidden
-        }
-        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Негативные проверки входа")]
         [NUnit.Framework.CategoryAttribute("BadLogins")]
@@ -78,23 +70,21 @@ namespace SpecFlowTests
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Негативные проверки входа", new string[] {
                         "BadLogins"});
-#line 7
+#line 4
 this.ScenarioSetup(scenarioInfo);
-#line 3
-this.FeatureBackground();
-#line 8
+#line 5
        testRunner.Then("открывается страница \"Главная\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
-#line 9
+#line 6
        testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 10
+#line 7
        testRunner.Then("открывается страница \"Авторизация\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
-#line 11
+#line 8
        testRunner.And("пользователь (заполняет поле) \"Логин\" значением \"Хэй бэби\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 12
+#line 9
        testRunner.And("пользователь (заполняет поле) \"Пароль\" значением \"Лэтс мув\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 13
+#line 10
        testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 14
+#line 11
        testRunner.Then("пользователь (проверяет значение элемента) \"Текст ошибки\" со значением \"Не верный" +
                     " логин или пароль!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
 #line hidden

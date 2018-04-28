@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.10.1\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,6 +36,9 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -61,7 +65,19 @@
   <ItemGroup>
     <Compile Include="BasePage.cs" />
     <Compile Include="BaseTestConfig.cs" />
+    <Compile Include="CommonSteps.cs" />
+    <Compile Include="CustomElements\Attributes\ActionTitleAttribute.cs" />
+    <Compile Include="CustomElements\Attributes\ElementTitleAttribute.cs" />
+    <Compile Include="CustomElements\Attributes\FindByAttribute.cs" />
+    <Compile Include="CustomElements\Attributes\PageTitleAttribute.cs" />
+    <Compile Include="CustomElements\Elements\ImlButton.cs" />
+    <Compile Include="CustomElements\Elements\ImlTextInput.cs" />
+    <Compile Include="CustomElements\Elements\ImlTextLabel.cs" />
+    <Compile Include="CustomElements\ImlBlockElement.cs" />
+    <Compile Include="CustomElements\ImlElement.cs" />
+    <Compile Include="CustomElements\ImlList.cs" />
     <Compile Include="CustomPageFactory.cs" />
+    <Compile Include="Decorators\ImlFieldDecorator.cs" />
     <Compile Include="DriverFactory.cs" />
     <Compile Include="PageWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,6 +100,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Selenium.Chrome.WebDriver.2.38\build\Selenium.Chrome.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.Chrome.WebDriver.2.38\build\Selenium.Chrome.WebDriver.targets'))" />
     <Error Condition="!Exists('..\packages\SpecFlow.2.3.2\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.2.3.2\build\SpecFlow.targets'))" />
+    <Error Condition="!Exists('..\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.10.1\build\NUnit.props'))" />
   </Target>
   <Import Project="..\packages\SpecFlow.2.3.2\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.3.2\build\SpecFlow.targets')" />
 </Project>

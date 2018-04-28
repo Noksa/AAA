@@ -7,7 +7,7 @@ using TechTalk.SpecFlow;
 namespace AT_Core_Specflow
 {
     [Binding]
-    public abstract class BaseTestConfig
+    public class BaseTestConfig
     {
         protected Browser Browser;
         protected string Url;
@@ -15,6 +15,7 @@ namespace AT_Core_Specflow
         [BeforeScenario]
         public virtual void Setup()
         {
+            CustomPageFactory.AddAllPagesToList();
             var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
             if (!parsed)
                 throw new NullReferenceException(

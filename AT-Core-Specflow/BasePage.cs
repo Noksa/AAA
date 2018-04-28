@@ -1,115 +1,78 @@
-﻿using IML_AT_Core.Core;
-using IML_AT_Core.CustomElements.Elements;
-using IML_AT_Core.Decorators;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using AT_Core_Specflow.CustomElements;
+using AT_Core_Specflow.CustomElements.Attributes;
+using AT_Core_Specflow.CustomElements.Elements;
+using NUnit.Framework;
 using OpenQA.Selenium.Support.PageObjects;
 using TechTalk.SpecFlow;
+using ImlFieldDecorator = AT_Core_Specflow.Decorators.ImlFieldDecorator;
 
 namespace AT_Core_Specflow
 {
-    [Binding]
     public abstract class BasePage
     {
         protected BasePage()
         {
+            CustomPageFactory.Instance.Members.Clear();
             PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
         }
 
-        [StepDefinition(@"пользователь нажимает кнопку ""(.*)""")]
-
-        public void ЕслиПользовательНажимаетКнопку(string p0)
-
+        public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
         {
-
-            ScenarioContext.Current.Pending();
-
+            var method = FindMethodByActionTitle(actionTitle);
+            method.Invoke(this, parameters);
         }
 
 
-
-        [StepDefinition(@"открывается страница ""(.*)""")]
-
-        public void ТоОткрываетсяСтраница(string pageTitle)
-
+        private MethodInfo FindMethodByActionTitle(string actionTitle)
         {
+            // find the name of method in base class
+            var methodName = "";
+            var listOfBaseMethods = typeof(BasePage).GetMethods().ToList();
+            foreach (var method in listOfBaseMethods)
+            {
+                if (method.GetCustomAttribute(typeof(ActionTitleAttribute), true) is ActionTitleAttribute
+                        actionTitleAttribute && actionTitleAttribute.ActionTitle == actionTitle)
+                {
+                    methodName = method.Name;
+                    break;
+                }
+            }
 
-            CustomPageFactory.CurrentPage.Members.Clear();
+            return FindMethodByName(methodName);
+        }
 
-            // CustomPageFactory.CurrentPage.OpenPage(pageTitle);
-
+        private MethodInfo FindMethodByName(string methodName)
+        {
+            var theMethod = GetType().GetMethod(methodName);
+            if (theMethod != null && theMethod.DeclaringType == GetType()) return theMethod;
+            theMethod = typeof(BasePage).GetMethod(methodName);
+            if (theMethod != null) return theMethod;
+            return null;
         }
 
 
-
-        [StepDefinition(@"пользователь заполняет поле ""(.*)"" значением ""(.*)""")]
-
-        public void ТоПользовательЗаполняетПолеЗначением(string p0, string p1)
-
-        {
-
-            ScenarioContext.Current.Pending();
-
-        }
-
-
-
-        [StepDefinition(@"пользователь \(нажимает кнопку\) ""(.*)""")]
-
-        public void ТоПользовательНажимаетКнопку(string buttonName)
-
-        {
-
-            //  var btn = (ImlButton)CustomPageFactory.CurrentPage.GetElementByTitle(buttonName);
-
-           // btn.Click();
-
-        }
-
-
-
-        [StepDefinition(@"Запускается браузер ""(.*)"" и открывается страница ""(.*)""")]
-
-        public void ДопустимЗапускаетсяБраузерИОткрываетсяСтраница(string p0, string p1)
-
-        {
-
-            DriverFactory.GetDriver().Navigate().GoToUrl(p1);
-
-        }
-
-
-
-        [StepDefinition(@"пользователь \(заполняет поле\) ""(.*)"" значением ""(.*)""")]
-
+        [ActionTitle("заполняет поле")]
         public void FillField(string elementTitle, string value)
-
         {
-
-            // var field = (ImlTextInput)CustomPageFactory.Instance.GetElementByTitle(elementTitle);
-
-            //  field.SendKeys(value);
-
+            var element = (ImlElement) CustomPageFactory.Instance.GetElementByTitle(elementTitle);
+            element.SendKeys(value);
         }
 
-        [StepDefinition(@"пользователь \(проверяет значение элемента\) ""(.*)"" со значением ""(.*)""")]
-
-        public void ТоПользовательПроверяетЗначениеЭлементаСоЗначением(string elementTitle, string expectedValue)
-
+        [ActionTitle("нажимает кнопку")]
+        public void PressButton(string elementTitle)
         {
-
-            // var element = (IML_AT_Core.CustomElements.ImlElement)CustomPageFactory.Instance.GetElementByTitle(elementTitle);
-
-            //  Assert.AreEqual(expectedValue, element.Text, "Значение элемента не совпадает с ожидаемым.");
-
+            var element = (ImlElement)CustomPageFactory.Instance.GetElementByTitle(elementTitle);
+            element.Click();
         }
 
-
-
-
-
-
-
-
-
+        [ActionTitle("проверяет значение элемента")]
+        public void CheckElementValue(string elementTitle, string expectedValue)
+        {
+            var element = (ImlElement)CustomPageFactory.Instance.GetElementByTitle(elementTitle);
+            Assert.AreEqual(expectedValue, element.Text, $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
+        }
     }
-
 }
