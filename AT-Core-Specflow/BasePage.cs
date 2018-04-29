@@ -27,7 +27,11 @@ namespace AT_Core_Specflow
             var method = FindMethodByActionTitle(actionTitle, parameters);
             method.Invoke(this, parameters);
         }
-
+        public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, params object[] parameters)
+        {
+            var method = FindMethodByActionTitle(actionTitle, parameters);
+            method.Invoke(this, parameters);
+        }
 
         private MethodInfo FindMethodByActionTitle(string actionTitle, object[] parameters)
         {
@@ -36,6 +40,17 @@ namespace AT_Core_Specflow
              method.GetCustomAttribute(typeof(ActionTitleAttribute)) is ActionTitleAttribute attr && attr.ActionTitle == actionTitle && CoreFunctions.CheckParamsTypesOfMethod(parameters, method.GetParameters()));
             if (searchedMethod != null) return searchedMethod;
             throw  new NullReferenceException($"Cant find method for action '{actionTitle}' with parameters: {parameters}.");
+        }
+
+        private MethodInfo FindMethodByActionTitleInBlock(string blockName, string actionTitle, object[] parameters)
+        {
+            // Ищем элемент блока.
+            var block = CustomPageFactory.Instance.GetElementByTitle(blockName);
+            // Ищем метод в блоке . Если там его нет - ищем метод на странице. Если и там его нет - ищем в базовом классе.
+            var searchedMethod = block.GetType().GetMethods().FirstOrDefault(method =>
+                method.GetCustomAttribute(typeof(ActionTitleAttribute)) is ActionTitleAttribute attr && attr.ActionTitle == actionTitle && CoreFunctions.CheckParamsTypesOfMethod(parameters, method.GetParameters()));
+            if (searchedMethod != null) return searchedMethod;
+            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{blockName}' with parameters: {parameters}.");
         }
 
 
