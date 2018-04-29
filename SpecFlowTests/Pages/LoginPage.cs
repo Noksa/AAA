@@ -1,4 +1,5 @@
-﻿using AT_Core_Specflow;
+﻿using System;
+using AT_Core_Specflow;
 using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.CustomElements.Elements;
 using IML_AT_Core.Core;
@@ -42,6 +43,13 @@ namespace SpecFlowTests.Pages
         public void CheckErrorMsg(string expectedText)
         {
            StepRunner.Run("Ожидание появления ошибки и проверка текст ошибки", () => Assert.AreEqual(errorMsg.Text, expectedText, "Текст ошибки не соответствует ожидаемому."));
+        }
+
+
+        public override void FillField(string elementTitle, string value)
+        {
+            Console.WriteLine("test");
+            base.FillField(elementTitle, value);
         }
     }
 }

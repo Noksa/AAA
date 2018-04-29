@@ -1,4 +1,5 @@
-﻿using AT_Core_Specflow;
+﻿using System;
+using AT_Core_Specflow;
 using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.CustomElements.Elements;
 
@@ -18,7 +19,11 @@ namespace SpecFlowTests.Pages
             loginButton.Click();
             return new LoginPage();
         }
-        
-        
+
+        public override void FillField(string elementTitle, string value)
+        {
+            Console.WriteLine("test");
+            base.FillField(elementTitle, value);
+        }
     }
 }

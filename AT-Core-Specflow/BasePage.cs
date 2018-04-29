@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.CustomElements.Elements;
@@ -21,58 +24,56 @@ namespace AT_Core_Specflow
 
         public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
         {
-            var method = FindMethodByActionTitle(actionTitle);
+            var method = FindMethodByActionTitle(actionTitle, parameters);
             method.Invoke(this, parameters);
         }
 
 
-        private MethodInfo FindMethodByActionTitle(string actionTitle)
+        private MethodInfo FindMethodByActionTitle(string actionTitle, object[] parameters)
         {
-            // find the name of method in base class
-            var methodName = "";
-            var listOfBaseMethods = typeof(BasePage).GetMethods().ToList();
-            foreach (var method in listOfBaseMethods)
-            {
-                if (method.GetCustomAttribute(typeof(ActionTitleAttribute), true) is ActionTitleAttribute
-                        actionTitleAttribute && actionTitleAttribute.ActionTitle == actionTitle)
-                {
-                    methodName = method.Name;
-                    break;
-                }
-            }
-
-            return FindMethodByName(methodName);
-        }
-
-        private MethodInfo FindMethodByName(string methodName)
-        {
-            var theMethod = GetType().GetMethod(methodName);
-            if (theMethod != null && theMethod.DeclaringType == GetType()) return theMethod;
-            theMethod = typeof(BasePage).GetMethod(methodName);
-            if (theMethod != null) return theMethod;
-            return null;
+            // Ищем метод на дочерней странице. Если там его нет - ищем метод в базовом классе.
+            var searchedMethod = GetType().GetMethods().FirstOrDefault(method => 
+             method.GetCustomAttribute(typeof(ActionTitleAttribute)) is ActionTitleAttribute attr && attr.ActionTitle == actionTitle && CoreFunctions.CheckParamsTypesOfMethod(parameters, method.GetParameters()));
+            if (searchedMethod != null) return searchedMethod;
+            throw  new NullReferenceException($"Cant find method for action '{actionTitle}' with parameters: {parameters}.");
         }
 
 
         [ActionTitle("заполняет поле")]
-        public void FillField(string elementTitle, string value)
+        public virtual void FillField(string elementTitle, string value)
         {
             var element = (ImlElement) CustomPageFactory.Instance.GetElementByTitle(elementTitle);
             element.SendKeys(value);
         }
 
         [ActionTitle("нажимает кнопку")]
-        public void PressButton(string elementTitle)
+        public virtual void PressButton(string elementTitle)
         {
             var element = (ImlElement)CustomPageFactory.Instance.GetElementByTitle(elementTitle);
             element.Click();
         }
 
         [ActionTitle("проверяет значение элемента")]
-        public void CheckElementValue(string elementTitle, string expectedValue)
+        public virtual void CheckElementValue(string elementTitle, string expectedValue)
         {
             var element = (ImlElement)CustomPageFactory.Instance.GetElementByTitle(elementTitle);
             Assert.AreEqual(expectedValue, element.Text, $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
+        }
+
+
+        private static class CoreFunctions
+        {
+            public static bool CheckParamsTypesOfMethod(object[] methodExpectedParams,
+                ParameterInfo[] methodActualParams)
+            {
+                var listOfParam = methodExpectedParams.Select(param => param.GetType()).ToList();
+                var result = true;
+                for (var i = 0; i < listOfParam.Count; i++)
+                {
+                    if (listOfParam[i] != methodActualParams[i].ParameterType) result = false;
+                }
+                return result;
+            }
         }
     }
 }
