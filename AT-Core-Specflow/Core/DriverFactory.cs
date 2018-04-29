@@ -9,7 +9,7 @@ using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Safari;
 
-namespace AT_Core_Specflow
+namespace AT_Core_Specflow.Core
 {
     public abstract class DriverFactory
     {

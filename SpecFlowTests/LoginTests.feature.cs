@@ -75,16 +75,18 @@ this.ScenarioSetup(scenarioInfo);
 #line 5
        testRunner.Then("открывается страница \"Главная\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
 #line 6
-       testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+    testRunner.And("пользователь в блоке \"Контактная информация\" (нажимает кнопку) \"Адрес\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
 #line 7
-       testRunner.Then("открывается страница \"Авторизация\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
-#line 8
-       testRunner.And("пользователь (заполняет поле) \"Логин\" значением \"Хэй бэби\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 9
-       testRunner.And("пользователь (заполняет поле) \"Пароль\" значением \"Лэтс мув\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 10
        testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+#line 8
+       testRunner.Then("открывается страница \"Авторизация\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
+#line 9
+       testRunner.And("пользователь (заполняет поле) \"Логин\" значением \"Хэй бэби\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+#line 10
+       testRunner.And("пользователь (заполняет поле) \"Пароль\" значением \"Лэтс мув\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
 #line 11
+       testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+#line 12
        testRunner.Then("пользователь (проверяет значение элемента) \"Текст ошибки\" со значением \"Не верный" +
                     " логин или пароль!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
 #line hidden

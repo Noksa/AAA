@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using AT_Core_Specflow.Core;
 using IML_AT_Core.CustomElements;
 using IML_AT_Core.CustomElements.Attributes;
 using OpenQA.Selenium;
@@ -34,7 +35,12 @@ namespace AT_Core_Specflow.Decorators
                 default:
                     return null;
             }
-            var elementTitleAttribute = targetType.BaseType == typeof(ImlBlockElement) ? targetType.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute : member.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute;
+
+            if (!(targetType.BaseType == typeof(ImlElement) || targetType.BaseType == typeof(ImlBlockElement) ||
+                  targetType.IsGenericType &&
+                  targetType.GetGenericTypeDefinition() == typeof(CustomElements.ImlList<>))) return null;
+
+                var elementTitleAttribute = targetType.BaseType == typeof(ImlBlockElement) ? targetType.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute : member.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute;
             if (elementTitleAttribute != null && elementTitleAttribute.Name.Length > 0)
                 elementTitle = elementTitleAttribute.Name;
 

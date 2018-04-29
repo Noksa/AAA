@@ -1,7 +1,9 @@
 ﻿using System;
 using AT_Core_Specflow;
+using AT_Core_Specflow.Core;
 using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.CustomElements.Elements;
+using SpecFlowTests.Blocks.Common;
 
 namespace SpecFlowTests.Pages
 {
@@ -25,5 +27,7 @@ namespace SpecFlowTests.Pages
             Console.WriteLine("test");
             base.FillField(elementTitle, value);
         }
+
+        private ContactInformationBlock contactInformation;
     }
 }

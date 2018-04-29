@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IML_AT_Core.CustomElements;
-using IML_AT_Core.CustomElements.Elements;
-using NUnit.Framework;
+﻿using AT_Core_Specflow.Core;
 using TechTalk.SpecFlow;
-using ImlButton = AT_Core_Specflow.CustomElements.Elements.ImlButton;
-using ImlElement = AT_Core_Specflow.CustomElements.ImlElement;
-using ImlTextInput = AT_Core_Specflow.CustomElements.Elements.ImlTextInput;
 
-namespace AT_Core_Specflow
+namespace AT_Core_Specflow.StepsDefenitions
 {
     [Binding]
     public class CommonSteps
@@ -36,6 +26,14 @@ namespace AT_Core_Specflow
             CustomPageFactory.Instance.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle, value);
         }
 
+
+        // блоки
+
+        [StepDefinition("^пользователь в блоке \"([^\"]*)\" \\((.*)\\) \"([^\"]*)\"$")]
+        public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, string elementTitle)
+        {
+            CustomPageFactory.Instance.CurrentPage.ExecuteMethodByTitleInBlock(blockName, actionTitle, elementTitle);
+        }
 
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Configuration;
+using AT_Core_Specflow.Core;
 using IML_AT_Core.Core;
 using IML_AT_Core.Helpers;
 using TechTalk.SpecFlow;
+using DriverFactory = AT_Core_Specflow.Core.DriverFactory;
 
-namespace AT_Core_Specflow
+namespace AT_Core_Specflow.Hooks
 {
     [Binding]
     public class BaseTestConfig

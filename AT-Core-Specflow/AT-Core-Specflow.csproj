@@ -63,9 +63,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasePage.cs" />
-    <Compile Include="BaseTestConfig.cs" />
-    <Compile Include="CommonSteps.cs" />
+    <Compile Include="Core\BasePage.cs" />
+    <Compile Include="Hooks\BaseTestConfig.cs" />
+    <Compile Include="StepsDefenitions\CommonSteps.cs" />
     <Compile Include="CustomElements\Attributes\ActionTitleAttribute.cs" />
     <Compile Include="CustomElements\Attributes\ElementTitleAttribute.cs" />
     <Compile Include="CustomElements\Attributes\FindByAttribute.cs" />
@@ -76,10 +76,10 @@
     <Compile Include="CustomElements\ImlBlockElement.cs" />
     <Compile Include="CustomElements\ImlElement.cs" />
     <Compile Include="CustomElements\ImlList.cs" />
-    <Compile Include="CustomPageFactory.cs" />
+    <Compile Include="Core\CustomPageFactory.cs" />
     <Compile Include="Decorators\ImlFieldDecorator.cs" />
-    <Compile Include="DriverFactory.cs" />
-    <Compile Include="PageWrapper.cs" />
+    <Compile Include="Core\DriverFactory.cs" />
+    <Compile Include="Core\PageWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +92,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Selenium.Chrome.WebDriver.2.38\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('..\packages\Selenium.Chrome.WebDriver.2.38\build\Selenium.Chrome.WebDriver.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

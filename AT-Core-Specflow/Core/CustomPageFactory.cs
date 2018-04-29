@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using IML_AT_Core.CustomElements.Attributes;
 using PageTitleAttribute = AT_Core_Specflow.CustomElements.Attributes.PageTitleAttribute;
 
-namespace AT_Core_Specflow
+namespace AT_Core_Specflow.Core
 {
     public class CustomPageFactory
     {
