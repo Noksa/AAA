@@ -8,15 +8,13 @@ namespace AT_Core_Specflow.Core
     public class PageContext
     {
         private Dictionary<object, string> _elements;
-        private Dictionary<string, Dictionary<object, string>> _blocksElements;
+        private Dictionary<string, Dictionary<object, string>> _elementsInBlocks;
         public Dictionary<object, string> Elements => _elements ?? (_elements = new Dictionary<object, string>());
 
-        public Dictionary<string, Dictionary<object, string>> BlocksElements =>
-            _blocksElements ?? (_blocksElements = new Dictionary<string, Dictionary<object, string>>());
+        public Dictionary<string, Dictionary<object, string>> ElementsInBlocks =>
+            _elementsInBlocks ?? (_elementsInBlocks = new Dictionary<string, Dictionary<object, string>>());
 
         public BasePage CurrentPage { get; private set; }
-        public object DecoratingBlock { get; set; }
-        public object DecoratingPage { get; set; }
         public BasePage OpenPage(string title)
         {
             foreach (var page in PageManager.PagesTypes)

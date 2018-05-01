@@ -12,7 +12,7 @@ namespace AT_Core_Specflow.Core
         private static readonly ThreadLocal<HashSet<Type>> _PagesTypes = new ThreadLocal<HashSet<Type>>();
         private static readonly ThreadLocal<PageContext> CurrentPage = new ThreadLocal<PageContext>();
 
-        public static PageContext Instance
+        public static PageContext PageContext
         {
             get
             {

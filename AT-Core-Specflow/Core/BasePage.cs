@@ -27,7 +27,7 @@ namespace AT_Core_Specflow.Core
 
         protected BasePage()
         {
-            PageManager.Instance.Elements.Clear();
+            PageManager.PageContext.Elements.Clear();
             PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
         }
 
@@ -40,7 +40,7 @@ namespace AT_Core_Specflow.Core
         {
             var block = GetElementByTitle(blockName);
             var method = FindMethodByActionTitleInBlock(blockName, actionTitle, parameters);
-            if (method != null) method.Invoke(block.GetType(), parameters);
+            if (method != null) method.Invoke(block, parameters);
             IsUsedBlock = true;
             _usedBlock = block;
             method = FindMethodByActionTitle(actionTitle, parameters);
@@ -65,11 +65,9 @@ namespace AT_Core_Specflow.Core
 
         private MethodInfo FindMethodByActionTitleInBlock(string blockName, string actionTitle, object[] parameters)
         {
-            // Ищем блок.
-            //var block = CoreFunctions.FindBlockByTitle(blockName);
             var block = GetElementByTitle(blockName);
-            // Ищем метод в блоке . Если там его нет - ищем метод на странице. Если и там его нет - ищем в базовом классе.
-            var searchedMethod = block.GetType().GetMethods().FirstOrDefault(method =>
+            // Ищем метод в блоке.
+            var searchedMethod = block.GetType().GetMethods(BindingFlags.DeclaredOnly).FirstOrDefault(method =>
                 method.GetCustomAttribute(typeof(ActionTitleAttribute)) is ActionTitleAttribute attr && attr.ActionTitle == actionTitle && CoreFunctions.CheckParamsTypesOfMethod(parameters, method.GetParameters()));
             return searchedMethod;
            }
@@ -78,19 +76,19 @@ namespace AT_Core_Specflow.Core
         {
             if (!IsUsedBlock)
             {
-                var element = PageManager.Instance.Elements.FirstOrDefault(ele => ele.Value == elementTitle).Key;
+                var element = PageManager.PageContext.Elements.FirstOrDefault(ele => ele.Value == elementTitle).Key;
                 if (element != null) return element;
                 throw new NullReferenceException(
-                    $"Cant find element with title '{elementTitle}' in page {PageManager.Instance.CurrentPage.GetType()}");
+                    $"Cant find element with title '{elementTitle}' in page {PageManager.PageContext.CurrentPage.GetType()}");
             }
             var blockName =
                 ((ElementTitleAttribute) _usedBlock.GetType().GetCustomAttribute(typeof(ElementTitleAttribute)))
                 .Name;
-            var elementInBlock = PageManager.Instance.BlocksElements.FirstOrDefault(b => b.Key == blockName).Value
+            var elementInBlock = PageManager.PageContext.ElementsInBlocks.FirstOrDefault(b => b.Key == blockName).Value
                 .FirstOrDefault(ele => ele.Value == elementTitle).Key;
             if (elementInBlock != null) return elementInBlock;
             throw new NullReferenceException(
-                $"Cant find element with name '{elementTitle}' in block '{blockName}' at page {PageManager.Instance.CurrentPage}");
+                $"Cant find element with name '{elementTitle}' in block '{blockName}' at page {PageManager.PageContext.CurrentPage}");
 
         }
 

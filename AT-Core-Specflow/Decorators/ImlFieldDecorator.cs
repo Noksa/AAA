@@ -46,7 +46,7 @@ namespace AT_Core_Specflow.Decorators
                 targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(CustomElements.ImlList<>))
             {
                 var element = Activator.CreateInstance(targetType, locator, bys, cache, elementTitle);
-                if (member.DeclaringType.BaseType == typeof(BasePage)) PageManager.Instance.Elements.Add(element, elementTitle);
+                if (member.DeclaringType.BaseType == typeof(BasePage)) PageManager.PageContext.Elements.Add(element, elementTitle);
                 else if (member.DeclaringType.BaseType == typeof(ImlBlockElement))
                 {
                     var blockName =
@@ -91,16 +91,17 @@ namespace AT_Core_Specflow.Decorators
         private static bool FieldNeedDecorated(MemberInfo member)
         {
             var baseType = member.DeclaringType?.BaseType;
+            if (member.DeclaringType == typeof(ImlBlockElement) || member.DeclaringType == typeof(BasePage)) return false;
             return baseType == typeof(BasePage) || baseType == typeof(ImlBlockElement);
         }
 
 
         private static void AddBlockElement(string blockName, object element, string elementTitle)
         {
-            if (!PageManager.Instance.BlocksElements.TryGetValue(blockName, out var dictionary))
+            if (!PageManager.PageContext.ElementsInBlocks.TryGetValue(blockName, out var dictionary))
             {
                 dictionary = new Dictionary<object, string>();
-                PageManager.Instance.BlocksElements.Add(blockName, dictionary);
+                PageManager.PageContext.ElementsInBlocks.Add(blockName, dictionary);
             }
             if (dictionary.ContainsKey(element))
             {
