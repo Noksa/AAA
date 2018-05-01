@@ -15,6 +15,11 @@ namespace AT_Core_Specflow.Core
             _elementsInBlocks ?? (_elementsInBlocks = new Dictionary<string, Dictionary<object, string>>());
 
         public BasePage CurrentPage { get; private set; }
+
+        public string PageTitle
+        {
+            get => ((PageTitleAttribute) CurrentPage.GetType().GetCustomAttribute(typeof(PageTitleAttribute))).Title;
+        }
         public BasePage OpenPage(string title)
         {
             foreach (var page in PageManager.PagesTypes)

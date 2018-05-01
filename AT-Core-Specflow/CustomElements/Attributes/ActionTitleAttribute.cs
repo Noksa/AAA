@@ -2,7 +2,7 @@
 
 namespace AT_Core_Specflow.CustomElements.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class ActionTitleAttribute : Attribute
     {
         public string ActionTitle { get; set; }

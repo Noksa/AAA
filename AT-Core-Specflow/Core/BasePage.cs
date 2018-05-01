@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
 using NUnit.Framework;
@@ -13,20 +12,17 @@ namespace AT_Core_Specflow.Core
 {
     public abstract class BasePage
     {
-        protected ThreadLocal<bool> isUsedBlock = new ThreadLocal<bool>();
-        private object _usedBlock;
-        protected bool IsUsedBlock
-        {
-            get
-            {
-                if (!isUsedBlock.IsValueCreated) isUsedBlock.Value = false;
-                return isUsedBlock.Value;
-            }
-            set => isUsedBlock.Value = value;
-        }
+        protected bool IsUsedBlock { get; set; }
+        private readonly object _usedBlock;
 
         protected BasePage()
         {
+            if (GetType().BaseType == typeof(ImlBlockElement))
+            {
+                IsUsedBlock = true;
+                _usedBlock = this;
+                return;
+            }
             PageManager.PageContext.Elements.Clear();
             PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
         }
@@ -36,41 +32,47 @@ namespace AT_Core_Specflow.Core
             var method = FindMethodByActionTitle(actionTitle, parameters);
             method.Invoke(this, parameters);
         }
+
         public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, params object[] parameters)
         {
             var block = GetElementByTitle(blockName);
-            var method = FindMethodByActionTitleInBlock(blockName, actionTitle, parameters);
-            if (method != null) method.Invoke(block, parameters);
-            IsUsedBlock = true;
-            _usedBlock = block;
+            var method = FindMethodByActionTitleInBlock(block, actionTitle, parameters);
+            if (method != null)
+            {
+                method.Invoke(block, parameters);
+                return;
+            }
             method = FindMethodByActionTitle(actionTitle, parameters);
-            try
+            if (method != null)
             {
                 method.Invoke(this, parameters);
+                return;
             }
-            finally
-            {
-                IsUsedBlock = false;
-            }
+            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{blockName}' at page '{PageManager.PageContext.PageTitle}' with parameters: {parameters.ToArray()}");
         }
 
         private MethodInfo FindMethodByActionTitle(string actionTitle, object[] parameters)
         {
             // Ищем метод на дочерней странице. Если там его нет - ищем метод в базовом классе.
-            var searchedMethod = GetType().GetMethods().FirstOrDefault(method => 
-             method.GetCustomAttribute(typeof(ActionTitleAttribute)) is ActionTitleAttribute attr && attr.ActionTitle == actionTitle && CoreFunctions.CheckParamsTypesOfMethod(parameters, method.GetParameters()));
-            if (searchedMethod != null) return searchedMethod;
-            throw  new NullReferenceException($"Cant find method for action '{actionTitle}' with parameters: {parameters}.");
+            foreach (var method in GetType().GetMethods())
+            {
+                if (method.GetCustomAttributes(typeof(ActionTitleAttribute)) is IEnumerable<ActionTitleAttribute> attr && attr.Any(titleAttribute => titleAttribute.ActionTitle == actionTitle &&
+                                               HelpFunc.CheckParamsTypesOfMethod(parameters, method.GetParameters()))) return method;
+            }
+            throw  new NullReferenceException($"Cant find method for action '{actionTitle}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
         }
 
-        private MethodInfo FindMethodByActionTitleInBlock(string blockName, string actionTitle, object[] parameters)
+        private MethodInfo FindMethodByActionTitleInBlock(object block, string actionTitle, object[] parameters)
         {
-            var block = GetElementByTitle(blockName);
             // Ищем метод в блоке.
-            var searchedMethod = block.GetType().GetMethods(BindingFlags.DeclaredOnly).FirstOrDefault(method =>
-                method.GetCustomAttribute(typeof(ActionTitleAttribute)) is ActionTitleAttribute attr && attr.ActionTitle == actionTitle && CoreFunctions.CheckParamsTypesOfMethod(parameters, method.GetParameters()));
-            return searchedMethod;
-           }
+            foreach (var method in block.GetType().GetMethods())
+            {
+                if (method.GetCustomAttributes(typeof(ActionTitleAttribute)) is IEnumerable<ActionTitleAttribute> attr && attr.Any(titleAttribute => titleAttribute.ActionTitle == actionTitle &&
+                                               HelpFunc.CheckParamsTypesOfMethod(parameters, method.GetParameters()))) return method;
+            }
+            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{((ImlBlockElement)block).NameOfElement}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
+
+        }
 
         public object GetElementByTitle(string elementTitle)
         {
@@ -79,7 +81,7 @@ namespace AT_Core_Specflow.Core
                 var element = PageManager.PageContext.Elements.FirstOrDefault(ele => ele.Value == elementTitle).Key;
                 if (element != null) return element;
                 throw new NullReferenceException(
-                    $"Cant find element with title '{elementTitle}' in page {PageManager.PageContext.CurrentPage.GetType()}");
+                    $"Cant find element with title '{elementTitle}' at page '{PageManager.PageContext.PageTitle}'");
             }
             var blockName =
                 ((ElementTitleAttribute) _usedBlock.GetType().GetCustomAttribute(typeof(ElementTitleAttribute)))
@@ -88,10 +90,12 @@ namespace AT_Core_Specflow.Core
                 .FirstOrDefault(ele => ele.Value == elementTitle).Key;
             if (elementInBlock != null) return elementInBlock;
             throw new NullReferenceException(
-                $"Cant find element with name '{elementTitle}' in block '{blockName}' at page {PageManager.PageContext.CurrentPage}");
+                $"Cant find element with name '{elementTitle}' in block '{blockName}' at page '{PageManager.PageContext.PageTitle}'");
 
         }
 
+
+        #region Actions
 
         [ActionTitle("заполняет поле")]
         public virtual void FillField(string elementTitle, string value)
@@ -101,6 +105,7 @@ namespace AT_Core_Specflow.Core
         }
 
         [ActionTitle("нажимает кнопку")]
+        [ActionTitle("кликает по ссылке")]
         public virtual void PressButton(string elementTitle)
         {
             var element = (ImlElement) GetElementByTitle(elementTitle);
@@ -114,8 +119,10 @@ namespace AT_Core_Specflow.Core
             Assert.AreEqual(expectedValue, element.Text, $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
         }
 
+        #endregion
 
-        private static class CoreFunctions
+        #region Private Class with help functions
+        private static class HelpFunc
         {
             public static bool CheckParamsTypesOfMethod(object[] methodExpectedParams,
                 ParameterInfo[] methodActualParams)
@@ -129,5 +136,6 @@ namespace AT_Core_Specflow.Core
                 return result;
             }
         }
+        #endregion
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection;
 using AT_Core_Specflow.Core;
 using OpenQA.Selenium;
@@ -46,8 +45,8 @@ namespace AT_Core_Specflow.Decorators
                 targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(CustomElements.ImlList<>))
             {
                 var element = Activator.CreateInstance(targetType, locator, bys, cache, elementTitle);
-                if (member.DeclaringType.BaseType == typeof(BasePage)) PageManager.PageContext.Elements.Add(element, elementTitle);
-                else if (member.DeclaringType.BaseType == typeof(ImlBlockElement))
+                if (member.DeclaringType.BaseType != typeof(ImlBlockElement)) PageManager.PageContext.Elements.Add(element, elementTitle);
+                else
                 {
                     var blockName =
                         ((ElementTitleAttribute) member.DeclaringType.GetCustomAttribute(typeof(ElementTitleAttribute)))

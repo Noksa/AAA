@@ -24,6 +24,7 @@ namespace AT_Core_Specflow.CustomElements
         protected string Title { get; set; }
         private readonly IElementLocator _locator;
         private IWebElement _realElement;
+        
 
         private IWebElement WrappedElement
         {
