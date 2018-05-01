@@ -8,11 +8,11 @@ namespace AT_Core_Specflow.Core
     public class PageContext
     {
         private Dictionary<object, string> _elements;
-        private Dictionary<string, Dictionary<object, string>> _blocks;
+        private Dictionary<string, Dictionary<object, string>> _blocksElements;
         public Dictionary<object, string> Elements => _elements ?? (_elements = new Dictionary<object, string>());
 
-        public Dictionary<string, Dictionary<object, string>> Blocks =>
-            _blocks ?? (_blocks = new Dictionary<string, Dictionary<object, string>>());
+        public Dictionary<string, Dictionary<object, string>> BlocksElements =>
+            _blocksElements ?? (_blocksElements = new Dictionary<string, Dictionary<object, string>>());
 
         public BasePage CurrentPage { get; private set; }
         public object DecoratingBlock { get; set; }

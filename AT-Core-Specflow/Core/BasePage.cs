@@ -14,7 +14,7 @@ namespace AT_Core_Specflow.Core
     public abstract class BasePage
     {
         protected ThreadLocal<bool> isUsedBlock = new ThreadLocal<bool>();
-        private object usedBlock;
+        private object _usedBlock;
         protected bool IsUsedBlock
         {
             get
@@ -42,10 +42,16 @@ namespace AT_Core_Specflow.Core
             var method = FindMethodByActionTitleInBlock(blockName, actionTitle, parameters);
             if (method != null) method.Invoke(block.GetType(), parameters);
             IsUsedBlock = true;
-            usedBlock = block;
+            _usedBlock = block;
             method = FindMethodByActionTitle(actionTitle, parameters);
-            method.Invoke(this, parameters);
-            IsUsedBlock = false;
+            try
+            {
+                method.Invoke(this, parameters);
+            }
+            finally
+            {
+                IsUsedBlock = false;
+            }
         }
 
         private MethodInfo FindMethodByActionTitle(string actionTitle, object[] parameters)
@@ -72,28 +78,22 @@ namespace AT_Core_Specflow.Core
         {
             if (!IsUsedBlock)
             {
-                foreach (var member in PageManager.Instance.Elements)
-                {
-                    if (member.Value == elementTitle) return member.Key;
-                }
-
+                var element = PageManager.Instance.Elements.FirstOrDefault(ele => ele.Value == elementTitle).Key;
+                if (element != null) return element;
                 throw new NullReferenceException(
                     $"Cant find element with title '{elementTitle}' in page {PageManager.Instance.CurrentPage.GetType()}");
             }
-            else return GetElementInBlockByTitle(usedBlock, elementTitle);
+            var blockName =
+                ((ElementTitleAttribute) _usedBlock.GetType().GetCustomAttribute(typeof(ElementTitleAttribute)))
+                .Name;
+            var elementInBlock = PageManager.Instance.BlocksElements.FirstOrDefault(b => b.Key == blockName).Value
+                .FirstOrDefault(ele => ele.Value == elementTitle).Key;
+            if (elementInBlock != null) return elementInBlock;
+            throw new NullReferenceException(
+                $"Cant find element with name '{elementTitle}' in block '{blockName}' at page {PageManager.Instance.CurrentPage}");
+
         }
 
-
-        public object GetElementInBlockByTitle(object block, string elementTitle)
-        {
-            var elementsInBlock = CoreFunctions.GetMembersInBlock(block);
-            foreach (var element in elementsInBlock)
-            {
-                if (element.GetType().GetCustomAttribute(typeof(ElementTitleAttribute)) is ElementTitleAttribute attr &&
-                    attr.Name == elementTitle) return element;
-            }
-            throw new NullReferenceException($"Cant find element with name '{elementTitle}' in block '{block}' at page {PageManager.Instance.CurrentPage}");
-        }
 
         [ActionTitle("заполняет поле")]
         public virtual void FillField(string elementTitle, string value)
@@ -129,14 +129,6 @@ namespace AT_Core_Specflow.Core
                     if (listOfParam[i] != methodActualParams[i].ParameterType) result = false;
                 }
                 return result;
-            }
-
-            public static IEnumerable<object> GetMembersInBlock(object block)
-            {
-                var list = new List<object>();
-                var members = block.GetType().GetMembers().Where(_ => _.DeclaringType == block.GetType());
-                members.ToList().ForEach( m => list.Add(m.GetType()));
-                return list;
             }
         }
     }

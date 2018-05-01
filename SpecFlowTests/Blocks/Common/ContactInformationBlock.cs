@@ -19,5 +19,10 @@ namespace SpecFlowTests.Blocks.Common
         [ElementTitle("Адрес")]
         [FindBy(XPath = "//p[@class = \'home\']")]
         private ImlTextLabel address;
+
+        [ElementTitle("Адрес2")]
+        [FindBy(XPath = "//p[@class = \'home\']")]
+        private ImlTextLabel addresds;
     }
+
 }

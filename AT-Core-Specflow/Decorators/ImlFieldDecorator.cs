@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using AT_Core_Specflow.Core;
-using IML_AT_Core.CustomElements;
-using IML_AT_Core.CustomElements.Attributes;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 using ElementTitleAttribute = AT_Core_Specflow.CustomElements.Attributes.ElementTitleAttribute;
@@ -18,8 +17,7 @@ namespace AT_Core_Specflow.Decorators
     {
         public object Decorate(MemberInfo member, IElementLocator locator)
         {
-            if (PageManager.Instance.DecoratingBlock != null &&
-                member.DeclaringType != PageManager.Instance.DecoratingBlock.GetType()) return null;
+            if (!FieldNeedDecorated(member)) return null;
             var elementTitle = "";
             Type targetType;
             var cache = ShouldCacheLookup(member);
@@ -38,11 +36,7 @@ namespace AT_Core_Specflow.Decorators
                     return null;
             }
 
-            if (!(targetType.BaseType == typeof(ImlElement) || targetType.BaseType == typeof(ImlBlockElement) ||
-                  targetType.IsGenericType &&
-                  targetType.GetGenericTypeDefinition() == typeof(CustomElements.ImlList<>))) return null;
-
-                var elementTitleAttribute = targetType.BaseType == typeof(ImlBlockElement) ? targetType.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute : member.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute;
+            var elementTitleAttribute = targetType.BaseType == typeof(ImlBlockElement) ? targetType.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute : member.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute;
             if (elementTitleAttribute != null && elementTitleAttribute.Name.Length > 0)
                 elementTitle = elementTitleAttribute.Name;
 
@@ -52,7 +46,14 @@ namespace AT_Core_Specflow.Decorators
                 targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(CustomElements.ImlList<>))
             {
                 var element = Activator.CreateInstance(targetType, locator, bys, cache, elementTitle);
-                PageManager.Instance.Elements.Add(element, elementTitle);
+                if (member.DeclaringType.BaseType == typeof(BasePage)) PageManager.Instance.Elements.Add(element, elementTitle);
+                else if (member.DeclaringType.BaseType == typeof(ImlBlockElement))
+                {
+                    var blockName =
+                        ((ElementTitleAttribute) member.DeclaringType.GetCustomAttribute(typeof(ElementTitleAttribute)))
+                        .Name;
+                    AddBlockElement(blockName, element, elementTitle);
+                }
                 return element;
 
             }
@@ -87,15 +88,28 @@ namespace AT_Core_Specflow.Decorators
 
 
 
-        private bool FieldNeedDecorated(MemberInfo member)
+        private static bool FieldNeedDecorated(MemberInfo member)
         {
-            var dPage = PageManager.Instance.DecoratingPage;
-            var dBlock = PageManager.Instance.DecoratingBlock;
+            var baseType = member.DeclaringType?.BaseType;
+            return baseType == typeof(BasePage) || baseType == typeof(ImlBlockElement);
+        }
 
-            if (dBlock != null &&
-                member.DeclaringType != dBlock.GetType()) return false;
-            if (dPage != null && member.DeclaringType != dPage.GetType()) return false;
-            return true;
+
+        private static void AddBlockElement(string blockName, object element, string elementTitle)
+        {
+            if (!PageManager.Instance.BlocksElements.TryGetValue(blockName, out var dictionary))
+            {
+                dictionary = new Dictionary<object, string>();
+                PageManager.Instance.BlocksElements.Add(blockName, dictionary);
+            }
+            if (dictionary.ContainsKey(element))
+            {
+                dictionary[element] = elementTitle;
+            }
+            else
+            {
+                dictionary.Add(element, elementTitle);
+            }
         }
     }
 }
