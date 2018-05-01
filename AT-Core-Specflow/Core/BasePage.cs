@@ -27,7 +27,7 @@ namespace AT_Core_Specflow.Core
 
         protected BasePage()
         {
-            CustomPageFactory.Instance.Members.Clear();
+            PageManager.Instance.Elements.Clear();
             PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
         }
 
@@ -72,13 +72,13 @@ namespace AT_Core_Specflow.Core
         {
             if (!IsUsedBlock)
             {
-                foreach (var member in CustomPageFactory.Instance.Members)
+                foreach (var member in PageManager.Instance.Elements)
                 {
                     if (member.Value == elementTitle) return member.Key;
                 }
 
                 throw new NullReferenceException(
-                    $"Cant find element with title '{elementTitle}' in page {CustomPageFactory.Instance.CurrentPage.GetType()}");
+                    $"Cant find element with title '{elementTitle}' in page {PageManager.Instance.CurrentPage.GetType()}");
             }
             else return GetElementInBlockByTitle(usedBlock, elementTitle);
         }
@@ -92,7 +92,7 @@ namespace AT_Core_Specflow.Core
                 if (element.GetType().GetCustomAttribute(typeof(ElementTitleAttribute)) is ElementTitleAttribute attr &&
                     attr.Name == elementTitle) return element;
             }
-            throw new NullReferenceException($"Cant find element with name '{elementTitle}' in block '{block}' at page {CustomPageFactory.Instance.CurrentPage}");
+            throw new NullReferenceException($"Cant find element with name '{elementTitle}' in block '{block}' at page {PageManager.Instance.CurrentPage}");
         }
 
         [ActionTitle("заполняет поле")]

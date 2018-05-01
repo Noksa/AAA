@@ -5,16 +5,21 @@ using PageTitleAttribute = AT_Core_Specflow.CustomElements.Attributes.PageTitleA
 
 namespace AT_Core_Specflow.Core
 {
-    public class PageWrapper
+    public class PageContext
     {
-        private Dictionary<object, string> _members;
-        public Dictionary<object, string> Members => _members ?? (_members = new Dictionary<object, string>());
+        private Dictionary<object, string> _elements;
+        private Dictionary<string, Dictionary<object, string>> _blocks;
+        public Dictionary<object, string> Elements => _elements ?? (_elements = new Dictionary<object, string>());
+
+        public Dictionary<string, Dictionary<object, string>> Blocks =>
+            _blocks ?? (_blocks = new Dictionary<string, Dictionary<object, string>>());
 
         public BasePage CurrentPage { get; private set; }
-
+        public object DecoratingBlock { get; set; }
+        public object DecoratingPage { get; set; }
         public BasePage OpenPage(string title)
         {
-            foreach (var page in CustomPageFactory.PagesTypes)
+            foreach (var page in PageManager.PagesTypes)
             {
                 if (!(page.GetCustomAttribute(typeof(PageTitleAttribute)) is PageTitleAttribute attr) ||
                     attr.Title != title) continue;

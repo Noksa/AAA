@@ -7,16 +7,16 @@ using PageTitleAttribute = AT_Core_Specflow.CustomElements.Attributes.PageTitleA
 
 namespace AT_Core_Specflow.Core
 {
-    public class CustomPageFactory
+    public class PageManager
     {
         private static readonly ThreadLocal<HashSet<Type>> _PagesTypes = new ThreadLocal<HashSet<Type>>();
-        private static readonly ThreadLocal<PageWrapper> CurrentPage = new ThreadLocal<PageWrapper>();
+        private static readonly ThreadLocal<PageContext> CurrentPage = new ThreadLocal<PageContext>();
 
-        public static PageWrapper Instance
+        public static PageContext Instance
         {
             get
             {
-                if (!CurrentPage.IsValueCreated) CurrentPage.Value = new PageWrapper();
+                if (!CurrentPage.IsValueCreated) CurrentPage.Value = new PageContext();
                 return CurrentPage.Value;
             }
         }

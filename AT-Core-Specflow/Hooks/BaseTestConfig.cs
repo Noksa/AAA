@@ -17,7 +17,7 @@ namespace AT_Core_Specflow.Hooks
         [BeforeScenario]
         public virtual void Setup()
         {
-            CustomPageFactory.AddAllPagesToList();
+            PageManager.AddAllPagesToList();
             var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
             if (!parsed)
                 throw new NullReferenceException(

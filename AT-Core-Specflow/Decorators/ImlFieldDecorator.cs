@@ -18,6 +18,8 @@ namespace AT_Core_Specflow.Decorators
     {
         public object Decorate(MemberInfo member, IElementLocator locator)
         {
+            if (PageManager.Instance.DecoratingBlock != null &&
+                member.DeclaringType != PageManager.Instance.DecoratingBlock.GetType()) return null;
             var elementTitle = "";
             Type targetType;
             var cache = ShouldCacheLookup(member);
@@ -50,13 +52,17 @@ namespace AT_Core_Specflow.Decorators
                 targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(CustomElements.ImlList<>))
             {
                 var element = Activator.CreateInstance(targetType, locator, bys, cache, elementTitle);
-                CustomPageFactory.Instance.Members.Add(element, elementTitle);
+                PageManager.Instance.Elements.Add(element, elementTitle);
                 return element;
 
             }
             throw new NotImplementedException(
                 $"Класс элемента \"{member.DeclaringType}.{targetType.Name}\" не является классом, который может быть декорирован.\nДекорирование возможно для класса \"ImlList<>\", а так же для наследников классов \"ImlBlockElement\" и \"ImlElement\"");
         }
+
+
+
+
 
         private static ReadOnlyCollection<By> CreateLocatorList(MemberInfo member, Type targetType)
         {
@@ -79,6 +85,17 @@ namespace AT_Core_Specflow.Decorators
             return cache;
         }
 
-        
+
+
+        private bool FieldNeedDecorated(MemberInfo member)
+        {
+            var dPage = PageManager.Instance.DecoratingPage;
+            var dBlock = PageManager.Instance.DecoratingBlock;
+
+            if (dBlock != null &&
+                member.DeclaringType != dBlock.GetType()) return false;
+            if (dPage != null && member.DeclaringType != dPage.GetType()) return false;
+            return true;
+        }
     }
 }

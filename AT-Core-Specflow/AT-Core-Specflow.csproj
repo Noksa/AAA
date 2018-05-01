@@ -76,10 +76,10 @@
     <Compile Include="CustomElements\ImlBlockElement.cs" />
     <Compile Include="CustomElements\ImlElement.cs" />
     <Compile Include="CustomElements\ImlList.cs" />
-    <Compile Include="Core\CustomPageFactory.cs" />
+    <Compile Include="Core\PageManager.cs" />
     <Compile Include="Decorators\ImlFieldDecorator.cs" />
     <Compile Include="Core\DriverFactory.cs" />
-    <Compile Include="Core\PageWrapper.cs" />
+    <Compile Include="Core\PageContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

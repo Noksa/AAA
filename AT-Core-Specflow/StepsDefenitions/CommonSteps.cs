@@ -9,21 +9,21 @@ namespace AT_Core_Specflow.StepsDefenitions
         [StepDefinition(@"открывается страница ""(.*)""")]
         public void OpenPage(string p0)
         {
-            CustomPageFactory.Instance.OpenPage(p0);
+            PageManager.Instance.OpenPage(p0);
         }
 
         [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\"$")]
         public void ExecuteMethodByTitle(string actionTitle, string elementTitle)
         {
-            CustomPageFactory.Instance.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle);
+            PageManager.Instance.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle);
         }
 
         [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\" (?:значением|со значением) \"([^\"]*)\"$")]
         public void ExecuteMethodByTitle(string actionTitle, string elementTitle, string value)
         {
-            //var button = (ImlButton)CustomPageFactory.Instance.GetElementByTitle(elementTitle);
+            //var button = (ImlButton)PageManager.Instance.GetElementByTitle(elementTitle);
             //button.Click();
-            CustomPageFactory.Instance.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle, value);
+            PageManager.Instance.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle, value);
         }
 
 
@@ -32,7 +32,7 @@ namespace AT_Core_Specflow.StepsDefenitions
         [StepDefinition("^пользователь в блоке \"([^\"]*)\" \\((.*)\\) \"([^\"]*)\"$")]
         public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, string elementTitle)
         {
-            CustomPageFactory.Instance.CurrentPage.ExecuteMethodByTitleInBlock(blockName, actionTitle, elementTitle);
+            PageManager.Instance.CurrentPage.ExecuteMethodByTitleInBlock(blockName, actionTitle, elementTitle);
         }
 
     }
