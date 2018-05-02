@@ -20,6 +20,7 @@ namespace AT_Core_Specflow.Helpers
 
         public static void Add(string key, string value)
         {
+            if (AsDict.ContainsKey(key)) AsDict.Remove(key);
             AsDict.Add(key, value);
         }
 

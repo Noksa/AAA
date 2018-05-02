@@ -102,6 +102,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blocks\Common\ContactInformationBlock.cs" />
+    <Compile Include="LoginTests - Copy.feature.cs">
+      <DependentUpon>LoginTests - Copy.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="LoginTests.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -114,6 +119,10 @@
   <ItemGroup>
     <None Include="allureConfig.json" />
     <None Include="App.config" />
+    <None Include="LoginTests - Copy.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>LoginTests - Copy.feature.cs</LastGenOutput>
+    </None>
     <None Include="LoginTests.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>LoginTests.feature.cs</LastGenOutput>

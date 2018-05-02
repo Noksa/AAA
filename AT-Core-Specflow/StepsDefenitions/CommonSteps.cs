@@ -22,17 +22,15 @@ namespace AT_Core_Specflow.StepsDefenitions
         }
 
         [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\"$")]
-        public void ExecuteMethodByTitle(string actionTitle, WrappedString elementTitle)
+        public void ExecuteMethodByTitle(string actionTitle, WrappedString param1)
         {
-            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle.Value);
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1.Value);
         }
 
-        [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\" (?:значением|со значением) \"([^\"]*)\"$")]
-        public void ExecuteMethodByTitle(string actionTitle, WrappedString elementTitle, WrappedString value)
+        [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\" (?:значением |со значением | |)\"([^\"]*)\"$")]
+        public void ExecuteMethodByTitle(string actionTitle, WrappedString param1, WrappedString param2)
         {
-            //var button = (ImlButton)PageManager.PageContext.GetElementByTitle(elementTitle);
-            //button.Click();
-            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle.Value, value.Value);
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1.Value, param2.Value);
         }
 
         #endregion

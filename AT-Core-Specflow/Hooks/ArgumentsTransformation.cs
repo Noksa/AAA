@@ -5,25 +5,39 @@ using System.Text;
 using System.Threading.Tasks;
 using AT_Core_Specflow.Helpers;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Bindings;
 
 namespace AT_Core_Specflow.Hooks
 {
     [Binding]
     public class ArgumentsTransformation
     {
-        [StepArgumentTransformation]
-        public WrappedString WrapString(string str)
+        private readonly ScenarioContext _scenarioContext;
+        public ArgumentsTransformation(ScenarioContext scenarioContext)
         {
-            return new WrappedString(CheckParamForVariable(str));
+            _scenarioContext = scenarioContext;
+        }
+        [StepArgumentTransformation]
+        public WrappedString WrapString(string param)
+        {
+            return new WrappedString(CheckParamForVariable(param));
         }
 
-        private static string CheckParamForVariable(string str)
+        private string CheckParamForVariable(string param)
         {
-            if (!str.StartsWith("~")) return str;
-            var value = Stash.GetValueByKey(str);
-            if (string.IsNullOrEmpty(value)) throw new NullReferenceException($"Detected variable with name '{str}' before it was written to Stash.");
+            var actionText = _scenarioContext.StepContext.StepInfo.Text;
+            if (!actionText.ToLower().Contains("(запоминает")) return ReplaceParamWithVariable(param);
+            var lastArg = _scenarioContext.StepContext.StepInfo.BindingMatch.Arguments.LastOrDefault() as string;
+            return param != lastArg ? ReplaceParamWithVariable(param) : param;
+        }
+
+        private string ReplaceParamWithVariable(string param)
+        {
+            if (!param.StartsWith("~")) return param;
+            var value = Stash.GetValueByKey(param);
+            if (string.IsNullOrEmpty(value)) throw new NullReferenceException($"Detected use variable with name '{param}' before it was written to Stash.");
             return value;
-        }        
+        }
     }
 
     public class WrappedString
@@ -32,6 +46,6 @@ namespace AT_Core_Specflow.Hooks
         {
             Value = value;
         }
-        public string Value { get; private set; }
+        public string Value { get; }
     }
 }
