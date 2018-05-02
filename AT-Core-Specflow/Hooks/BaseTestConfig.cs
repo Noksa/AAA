@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using Allure.Commons;
 using AT_Core_Specflow.Core;
 using AT_Core_Specflow.Helpers;
 using IML_AT_Core.Core;
@@ -17,6 +18,7 @@ namespace AT_Core_Specflow.Hooks
         [BeforeScenario]
         public virtual void Setup()
         {
+            AllureLifecycle.Instance.CleanupResultDirectory();
             PageManager.AddAllPagesToList();
             var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
             if (!parsed)

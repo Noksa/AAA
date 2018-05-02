@@ -11,11 +11,6 @@ using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Safari;
 using OpenQA.Selenium.Support.Extensions;
-using TechTalk.SpecFlow;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Allure.Commons;
 
 namespace AT_Core_Specflow.Core
