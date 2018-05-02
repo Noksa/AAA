@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Threading;
 using IML_AT_Core.Core;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Safari;
+using OpenQA.Selenium.Support.Extensions;
+using TechTalk.SpecFlow;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Allure.Commons;
 
 namespace AT_Core_Specflow.Core
 {
@@ -57,6 +66,17 @@ namespace AT_Core_Specflow.Core
             if (Driver.Value == null) return;
             Driver.Value.Quit();
             Driver.Value = null;
+        }
+
+        public static void MakeScreenshot()
+        {
+            var timestamp = DateTime.Now.ToString("dd-MM-yyyy-hhmmss");
+            var pathToFile = Path.Combine(TestContext.CurrentContext.TestDirectory,
+                TestContext.CurrentContext.Test.ID + "-" + timestamp + ".png");
+            GetDriver().TakeScreenshot()
+                .SaveAsFile(pathToFile, ScreenshotImageFormat.Png);
+            AllureLifecycle.Instance.AddAttachment(pathToFile, timestamp);
+            if (File.Exists(pathToFile)) File.Delete(pathToFile);
         }
     }
 }

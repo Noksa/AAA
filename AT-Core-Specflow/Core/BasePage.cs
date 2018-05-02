@@ -24,30 +24,46 @@ namespace AT_Core_Specflow.Core
                 return;
             }
             PageManager.PageContext.Elements.Clear();
-PageManager.PageContext.ElementsInBlocks.Clear()
-        PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
+            PageManager.PageContext.ElementsInBlocks.Clear();
+            PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
         }
 
         public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
         {
             var method = FindMethodByActionTitle(actionTitle, parameters);
-            method.Invoke(this, parameters);
+            try
+            {
+                method.Invoke(this, parameters);
+            }
+            catch (TargetInvocationException)
+            {
+                DriverFactory.MakeScreenshot();
+                throw;
+            }
         }
 
         public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, params object[] parameters)
         {
-            var block = GetElementByTitle(blockName);
-            var method = FindMethodByActionTitleInBlock(block, actionTitle, parameters);
-            if (method != null)
+            try
             {
-                method.Invoke(block, parameters);
-                return;
+                var block = GetElementByTitle(blockName);
+                var method = FindMethodByActionTitleInBlock(block, actionTitle, parameters);
+                if (method != null)
+                {
+                    method.Invoke(block, parameters);
+                    return;
+                }
+                method = FindMethodByActionTitle(actionTitle, parameters);
+                if (method != null)
+                {
+                    method.Invoke(this, parameters);
+                    return;
+                }
             }
-            method = FindMethodByActionTitle(actionTitle, parameters);
-            if (method != null)
+            catch (TargetInvocationException)
             {
-                method.Invoke(this, parameters);
-                return;
+                DriverFactory.MakeScreenshot();
+                throw;
             }
             throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{blockName}' at page '{PageManager.PageContext.PageTitle}' with parameters: {parameters.ToArray()}");
         }
