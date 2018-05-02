@@ -5,7 +5,6 @@ using System.Reflection;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.Helpers;
-using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
 using OpenQA.Selenium.Support.PageObjects;
 using ImlFieldDecorator = AT_Core_Specflow.Decorators.ImlFieldDecorator;
