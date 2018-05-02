@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AT-Core-Specflow", "..\AT-Core-Specflow\AT-Core-Specflow.csproj", "{A300788A-C8F0-4B79-AEF0-03D60314CAC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AT-Core-Specflow", "AT-Core-Specflow\AT-Core-Specflow.csproj", "{A300788A-C8F0-4B79-AEF0-03D60314CAC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecFlowTests", "..\SpecFlowTests\SpecFlowTests.csproj", "{8098D786-E461-4FF6-899A-C02AA8710C0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecFlowTests", "SpecFlowTests\SpecFlowTests.csproj", "{8098D786-E461-4FF6-899A-C02AA8710C0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
