@@ -24,7 +24,8 @@ namespace AT_Core_Specflow.Core
                 return;
             }
             PageManager.PageContext.Elements.Clear();
-            PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
+PageManager.PageContext.ElementsInBlocks.Clear()
+        PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
         }
 
         public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
