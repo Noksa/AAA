@@ -18,8 +18,8 @@ namespace SpecFlowTests
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.3.2.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Тестирование входов")]
-    public partial class ТестированиеВходовFeature
+    [NUnit.Framework.DescriptionAttribute("Попытка войти с неправильными логин\\пароль")]
+    public partial class ПопыткаВойтиСНеправильнымиЛогинПарольFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
@@ -31,7 +31,7 @@ namespace SpecFlowTests
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("ru"), "Тестирование входов", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("ru"), "Попытка войти с неправильными логин\\пароль", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -63,30 +63,50 @@ namespace SpecFlowTests
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 3
+#line 4
+testRunner.Given("пользователь (запоминает значение) \"Не fверный логин или пароль!\" \"~Текст ошибки\"" +
+                    "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Дано ");
+#line hidden
+        }
+        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Негативные проверки входа")]
         [NUnit.Framework.CategoryAttribute("BadLogins")]
-        public virtual void НегативныеПроверкиВхода()
+        [NUnit.Framework.TestCaseAttribute("РусскийЛогин", "РусскийПароль", null)]
+        [NUnit.Framework.TestCaseAttribute("EnglishLogin", "EnglishPassword", null)]
+        [NUnit.Framework.TestCaseAttribute("", "", null)]
+        [NUnit.Framework.TestCaseAttribute("123", "123", null)]
+        public virtual void НегативныеПроверкиВхода(string login, string password, string[] exampleTags)
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Негативные проверки входа", new string[] {
-                        "BadLogins"});
-#line 4
-this.ScenarioSetup(scenarioInfo);
-#line 5
-       testRunner.Then("открывается страница \"Главная\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
+            string[] @__tags = new string[] {
+                    "BadLogins"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Негативные проверки входа", @__tags);
 #line 6
-       testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+this.ScenarioSetup(scenarioInfo);
+#line 3
+this.FeatureBackground();
 #line 7
-       testRunner.Then("открывается страница \"Авторизация\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
+       testRunner.When("открывается страница \"Главная\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Когда ");
 #line 8
-       testRunner.And("пользователь (заполняет поле) \"Логин\" значением \"Хэй бэби\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 9
-       testRunner.And("пользователь (заполняет поле) \"Пароль\" значением \"Лэтс мув\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 10
        testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+#line 9
+       testRunner.Then("открывается страница \"Авторизация\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
+#line 10
+       testRunner.And(string.Format("пользователь (заполняет поле) \"Логин\" значением \"{0}\"", login), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
 #line 11
-       testRunner.Then("пользователь (проверяет значение элемента) \"Текст ошибки\" со значением \"Не fверны" +
-                    "й логин или пароль!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
+       testRunner.And(string.Format("пользователь (заполняет поле) \"Пароль\" значением \"{0}\"", password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+#line 12
+       testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
+#line 13
+       testRunner.Then("пользователь (проверяет значение элемента) \"Текст ошибки\" со значением \"~Текст ош" +
+                    "ибки\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
 #line hidden
             this.ScenarioCleanup();
         }

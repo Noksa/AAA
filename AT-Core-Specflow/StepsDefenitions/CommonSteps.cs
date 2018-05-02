@@ -1,4 +1,5 @@
 ﻿using AT_Core_Specflow.Core;
+using AT_Core_Specflow.Hooks;
 using TechTalk.SpecFlow;
 
 namespace AT_Core_Specflow.StepsDefenitions
@@ -9,9 +10,9 @@ namespace AT_Core_Specflow.StepsDefenitions
         #region Actions in pages
 
         [StepDefinition(@"открывается страница ""(.*)""")]
-        public void OpenPage(string p0)
+        public void OpenPage(WrappedString pageTitle)
         {
-            PageManager.PageContext.OpenPage(p0);
+            PageManager.PageContext.OpenPage(pageTitle.Value);
         }
 
         [StepDefinition("^пользователь \\((.*)\\)$")]
@@ -21,17 +22,17 @@ namespace AT_Core_Specflow.StepsDefenitions
         }
 
         [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\"$")]
-        public void ExecuteMethodByTitle(string actionTitle, string elementTitle)
+        public void ExecuteMethodByTitle(string actionTitle, WrappedString elementTitle)
         {
-            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle);
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle.Value);
         }
 
         [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\" (?:значением|со значением) \"([^\"]*)\"$")]
-        public void ExecuteMethodByTitle(string actionTitle, string elementTitle, string value)
+        public void ExecuteMethodByTitle(string actionTitle, WrappedString elementTitle, WrappedString value)
         {
             //var button = (ImlButton)PageManager.PageContext.GetElementByTitle(elementTitle);
             //button.Click();
-            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle, value);
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, elementTitle.Value, value.Value);
         }
 
         #endregion

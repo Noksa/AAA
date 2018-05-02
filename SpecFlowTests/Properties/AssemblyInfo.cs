@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using NUnit.Framework;
 
 [assembly: AssemblyTitle("SpecFlowTests")]
 [assembly: AssemblyDescription("")]
@@ -10,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
+[assembly: Parallelizable(ParallelScope.Fixtures)]
 [assembly: ComVisible(false)]
 
 [assembly: Guid("8098d786-e461-4ff6-899a-c02aa8710c0a")]

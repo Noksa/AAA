@@ -4,6 +4,7 @@ using Allure.Commons;
 using AT_Core_Specflow.Core;
 using AT_Core_Specflow.Helpers;
 using IML_AT_Core.Core;
+using NUnit.Framework;
 using TechTalk.SpecFlow;
 using DriverFactory = AT_Core_Specflow.Core.DriverFactory;
 
@@ -15,10 +16,17 @@ namespace AT_Core_Specflow.Hooks
         protected Browser Browser;
         protected string Url;
 
+        /// <summary>
+        /// Delete old allure results before all tests are executed.
+        /// </summary>
+        [BeforeTestRun]        
+        public static void DeleteOldResults()
+        {
+            AllureLifecycle.Instance.CleanupResultDirectory();
+        }
         [BeforeScenario]
         public virtual void Setup()
         {
-            AllureLifecycle.Instance.CleanupResultDirectory();
             PageManager.AddAllPagesToList();
             var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
             if (!parsed)

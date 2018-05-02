@@ -4,10 +4,11 @@ using System.Linq;
 using System.Reflection;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
+using AT_Core_Specflow.Helpers;
+using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
 using OpenQA.Selenium.Support.PageObjects;
 using ImlFieldDecorator = AT_Core_Specflow.Decorators.ImlFieldDecorator;
-
 namespace AT_Core_Specflow.Core
 {
     public abstract class BasePage
@@ -35,11 +36,16 @@ namespace AT_Core_Specflow.Core
             {
                 method.Invoke(this, parameters);
             }
-            catch (TargetInvocationException)
+            catch (TargetInvocationException ex)
             {
-                DriverFactory.MakeScreenshot();
-                throw;
+                TakeScreenshotAndThrowRealEx(ex);
             }
+        }
+
+        private static void TakeScreenshotAndThrowRealEx(Exception ex)
+        {
+            DriverFactory.MakeScreenshot();
+            throw ex.GetBaseException();
         }
 
         public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, params object[] parameters)
@@ -60,10 +66,9 @@ namespace AT_Core_Specflow.Core
                     return;
                 }
             }
-            catch (TargetInvocationException)
+            catch (TargetInvocationException ex)
             {
-                DriverFactory.MakeScreenshot();
-                throw;
+                TakeScreenshotAndThrowRealEx(ex);
             }
             throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{blockName}' at page '{PageManager.PageContext.PageTitle}' with parameters: {parameters.ToArray()}");
         }
@@ -129,6 +134,11 @@ namespace AT_Core_Specflow.Core
             element.Click();
         }
 
+        [ActionTitle("запоминает значение")]
+        public virtual void WriteValueToStash(string value, string variable)
+        {
+            Stash.Add(variable, value);
+        }
         [ActionTitle("проверяет значение элемента")]
         public virtual void CheckElementValue(string elementTitle, string expectedValue)
         {

@@ -65,13 +65,8 @@ namespace AT_Core_Specflow.Core
 
         public static void MakeScreenshot()
         {
-            var timestamp = DateTime.Now.ToString("dd-MM-yyyy-hhmmss");
-            var pathToFile = Path.Combine(TestContext.CurrentContext.TestDirectory,
-                TestContext.CurrentContext.Test.ID + "-" + timestamp + ".png");
-            GetDriver().TakeScreenshot()
-                .SaveAsFile(pathToFile, ScreenshotImageFormat.Png);
-            AllureLifecycle.Instance.AddAttachment(pathToFile, timestamp);
-            if (File.Exists(pathToFile)) File.Delete(pathToFile);
+            AllureLifecycle.Instance.AddAttachment($"Screenshot {Guid.NewGuid()}", "image/png",
+                GetDriver().TakeScreenshot().AsByteArray, ".png");
         }
     }
 }
