@@ -16,13 +16,11 @@ namespace AT_Core_Specflow.Core
 
         public BasePage CurrentPage { get; private set; }
 
-        public string PageTitle
-        {
-            get => ((PageTitleAttribute) CurrentPage.GetType().GetCustomAttribute(typeof(PageTitleAttribute))).Title;
-        }
+        public string PageTitle => ((PageTitleAttribute) CurrentPage.GetType().GetCustomAttribute(typeof(PageTitleAttribute))).Title;
+
         public BasePage OpenPage(string title)
         {
-            foreach (var page in PageManager.PagesTypes)
+            foreach (var page in PageManager.AllPages)
             {
                 if (!(page.GetCustomAttribute(typeof(PageTitleAttribute)) is PageTitleAttribute attr) ||
                     attr.Title != title) continue;

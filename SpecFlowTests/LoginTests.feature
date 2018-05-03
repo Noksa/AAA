@@ -14,5 +14,3 @@
 | login        | password        |
 | РусскийЛогин | РусскийПароль   |
 | EnglishLogin | EnglishPassword |
-|              |                 |
-| 123          | 123             |

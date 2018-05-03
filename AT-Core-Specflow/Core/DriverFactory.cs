@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Configuration;
-using System.IO;
 using System.Threading;
 using IML_AT_Core.Core;
-using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;

@@ -11,7 +11,7 @@ namespace AT_Core_Specflow.Core
 {
     public class PageManager
     {
-        private static readonly ThreadLocal<HashSet<Type>> _PagesTypes = new ThreadLocal<HashSet<Type>>();
+        private static readonly ThreadLocal<HashSet<Type>> PagesTypes = new ThreadLocal<HashSet<Type>>();
         private static readonly ThreadLocal<PageContext> CurrentPage = new ThreadLocal<PageContext>();
 
         public static PageContext PageContext
@@ -23,23 +23,23 @@ namespace AT_Core_Specflow.Core
             }
         }
 
-        public static HashSet<Type> PagesTypes
+        public static HashSet<Type> AllPages
         {
             get
             {
-                if (!_PagesTypes.IsValueCreated) _PagesTypes.Value = new HashSet<Type>();
-                return _PagesTypes.Value;
+                if (!PagesTypes.IsValueCreated) PagesTypes.Value = new HashSet<Type>();
+                return PagesTypes.Value;
             }
         }
 
         public static void AddAllPagesToList()
         {
             var pagesNamespace = ConfigurationManager.AppSettings.Get("PagesNamespace");
-            if (string.IsNullOrEmpty(pagesNamespace)) throw new NUnitException($"Cant find \"PagesNamespace\" key value in app.config. Add it.");
+            if (string.IsNullOrEmpty(pagesNamespace)) throw new NUnitException("Cant find \"PagesNamespace\" key or it's value == null in app.config.\nAdd it.");
             var allClasses = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(t => t.GetTypes())
                 .Where(t => t.IsClass && t.Namespace == pagesNamespace && t.GetCustomAttribute(typeof(PageTitleAttribute), true) != null).ToList();
-            allClasses.ForEach(page => PagesTypes.Add(page));
+            allClasses.ForEach(page => AllPages.Add(page));
         }
     }
 }

@@ -12,7 +12,7 @@ namespace AT_Core_Specflow.Core
 {
     public abstract class BasePage
     {
-        protected bool IsUsedBlock { get; set; }
+        protected bool IsUsedBlock { get; }
         private readonly object _usedBlock;
 
         protected BasePage()
@@ -59,17 +59,12 @@ namespace AT_Core_Specflow.Core
                     return;
                 }
                 method = FindMethodByActionTitle(actionTitle, parameters);
-                if (method != null)
-                {
-                    method.Invoke(this, parameters);
-                    return;
-                }
+                if (method != null) method.Invoke(this, parameters);
             }
             catch (TargetInvocationException ex)
             {
                 TakeScreenshotAndThrowRealEx(ex);
             }
-            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{blockName}' at page '{PageManager.PageContext.PageTitle}' with parameters: {parameters.ToArray()}");
         }
 
         private MethodInfo FindMethodByActionTitle(string actionTitle, object[] parameters)
@@ -91,7 +86,7 @@ namespace AT_Core_Specflow.Core
                 if (method.GetCustomAttributes(typeof(ActionTitleAttribute)) is IEnumerable<ActionTitleAttribute> attr && attr.Any(titleAttribute => titleAttribute.ActionTitle == actionTitle &&
                                                HelpFunc.CheckParamsTypesOfMethod(parameters, method.GetParameters()))) return method;
             }
-            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{((BlockElement)block).NameOfElement}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
+            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{((BlockTitleAttribute) block.GetType().GetCustomAttribute(typeof(BlockTitleAttribute))).Title}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
 
         }
 

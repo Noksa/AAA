@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using Allure.Commons;
 using AT_Core_Specflow.Core;
 using AT_Core_Specflow.Helpers;
@@ -27,6 +29,7 @@ namespace AT_Core_Specflow.Hooks
         [BeforeScenario]
         public virtual void Setup()
         {
+            
             Stash.AsDict.Clear();
             PageManager.AddAllPagesToList();
             var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
@@ -39,12 +42,31 @@ namespace AT_Core_Specflow.Hooks
                     "Не обнаружена стартовая страница в файле конфигурации App.config!\nДобавьте стартовую страницу в файл конфигурации. Key: StartUrl");
             DriverFactory.InitDriver(Browser);
             DriverFactory.GetDriver().Navigate().GoToUrl(Url);
+            AllureLifecycle.Instance.UpdateFixture(_ => _.name = "Инициализация драйвера.");
         }
 
         [AfterScenario]
         public virtual void TearDown()
         {
             DriverFactory.Dispose();
+            AllureLifecycle.Instance.UpdateFixture(_ => _.name = "Переменные теста");
+            AddTestVariablesToReport();
+        }
+
+        private void AddTestVariablesToReport()
+        {
+            var list = new List<StepResult>();
+            Stash.AsDict.ToList().ForEach(_ =>
+            {
+                var step = new StepResult
+                {
+                    name = $"Переменная \"{_.Key}\", значение: \"{_.Value}\"",
+                    status = Status.passed
+                };
+                list.Add(step);
+            });
+            
+            list.ForEach(_ => AllureSteps.AddSingleStep(_.name));
         }
     }
 }

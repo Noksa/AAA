@@ -68,8 +68,6 @@ namespace SpecFlowTests
         [NUnit.Framework.CategoryAttribute("BadLogins")]
         [NUnit.Framework.TestCaseAttribute("РусскийЛогин", "РусскийПароль", null)]
         [NUnit.Framework.TestCaseAttribute("EnglishLogin", "EnglishPassword", null)]
-        [NUnit.Framework.TestCaseAttribute("", "", null)]
-        [NUnit.Framework.TestCaseAttribute("123", "123", null)]
         public virtual void НегативныеПроверкиВхода(string login, string password, string[] exampleTags)
         {
             string[] @__tags = new string[] {
