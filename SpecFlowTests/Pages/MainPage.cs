@@ -10,7 +10,7 @@ namespace SpecFlowTests.Pages
     {
         [FindBy(XPath = "//a[@class = \'login\']")]
         [ElementTitle("Войти")]
-        private ImlButton loginButton;
+        private VButton loginButton;
 
         private ContactInformationBlock contactInformation;
     }

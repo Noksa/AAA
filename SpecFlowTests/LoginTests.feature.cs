@@ -84,8 +84,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 5
        testRunner.When("открывается страница \"Главная\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Когда ");
 #line 6
-    testRunner.Then("пользователь (запоминает значение) \"Не fверный логин или пароль!\" \"~Текст ошибки\"" +
-                    "", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
+    testRunner.Then("пользователь (запоминает значение) \"Не верный логин или пароль!\" \"~Текст ошибки\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
 #line 7
        testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
 #line 8

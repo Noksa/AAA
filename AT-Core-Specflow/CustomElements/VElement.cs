@@ -6,7 +6,7 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements
 {
-    public class ImlElement : IWebElement
+    public class VElement : IWebElement
     {
         protected readonly IEnumerable<By> Bys;
         protected bool CacheLookup;
@@ -25,7 +25,7 @@ namespace AT_Core_Specflow.CustomElements
 
 
 
-        public ImlElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
+        public VElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
         {
             Bys = bys;
             CacheLookup = cache;

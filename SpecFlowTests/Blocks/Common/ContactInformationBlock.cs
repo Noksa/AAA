@@ -8,8 +8,8 @@ using OpenQA.Selenium.Support.PageObjects;
 namespace SpecFlowTests.Blocks.Common
 {
     [FindBy(ClassName = "block9")]
-    [ElementTitle("Контактная информация")]
-    public class ContactInformationBlock : ImlBlockElement
+    [BlockTitle("Контактная информация")]
+    public class ContactInformationBlock : BlockElement
     {
         public ContactInformationBlock(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         { 
@@ -18,7 +18,7 @@ namespace SpecFlowTests.Blocks.Common
 
         [ElementTitle("Адрес")]
         [FindBy(XPath = "//p[@class = \'home\']")]
-        private ImlTextLabel address;
+        private VTextLabel address;
 
 
     }

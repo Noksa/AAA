@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using NUnit.Framework.Internal;
 using PageTitleAttribute = AT_Core_Specflow.CustomElements.Attributes.PageTitleAttribute;
 
 namespace AT_Core_Specflow.Core
@@ -32,9 +34,11 @@ namespace AT_Core_Specflow.Core
 
         public static void AddAllPagesToList()
         {
+            var pagesNamespace = ConfigurationManager.AppSettings.Get("PagesNamespace");
+            if (string.IsNullOrEmpty(pagesNamespace)) throw new NUnitException($"Cant find \"PagesNamespace\" key value in app.config. Add it.");
             var allClasses = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(t => t.GetTypes())
-                .Where(t => t.IsClass && t.Namespace == "SpecFlowTests.Pages" && t.GetCustomAttribute(typeof(PageTitleAttribute), true) != null).ToList();
+                .Where(t => t.IsClass && t.Namespace == pagesNamespace && t.GetCustomAttribute(typeof(PageTitleAttribute), true) != null).ToList();
             allClasses.ForEach(page => PagesTypes.Add(page));
         }
     }

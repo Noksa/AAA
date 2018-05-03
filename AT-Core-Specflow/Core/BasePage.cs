@@ -7,7 +7,7 @@ using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.Helpers;
 using NUnit.Framework;
 using OpenQA.Selenium.Support.PageObjects;
-using ImlFieldDecorator = AT_Core_Specflow.Decorators.ImlFieldDecorator;
+using VFieldDecorator = AT_Core_Specflow.Decorators.VFieldDecorator;
 namespace AT_Core_Specflow.Core
 {
     public abstract class BasePage
@@ -17,7 +17,7 @@ namespace AT_Core_Specflow.Core
 
         protected BasePage()
         {
-            if (GetType().BaseType == typeof(ImlBlockElement))
+            if (GetType().BaseType == typeof(BlockElement))
             {
                 IsUsedBlock = true;
                 _usedBlock = this;
@@ -25,7 +25,7 @@ namespace AT_Core_Specflow.Core
             }
             PageManager.PageContext.Elements.Clear();
             PageManager.PageContext.ElementsInBlocks.Clear();
-            PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
+            PageFactory.InitElements(DriverFactory.GetDriver(), this, new VFieldDecorator());
         }
 
         public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
@@ -91,7 +91,7 @@ namespace AT_Core_Specflow.Core
                 if (method.GetCustomAttributes(typeof(ActionTitleAttribute)) is IEnumerable<ActionTitleAttribute> attr && attr.Any(titleAttribute => titleAttribute.ActionTitle == actionTitle &&
                                                HelpFunc.CheckParamsTypesOfMethod(parameters, method.GetParameters()))) return method;
             }
-            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{((ImlBlockElement)block).NameOfElement}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
+            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{((BlockElement)block).NameOfElement}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
 
         }
 
@@ -121,7 +121,7 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("заполняет поле")]
         public virtual void FillField(string elementTitle, string value)
         {
-            var element = (ImlElement) GetElementByTitle(elementTitle);
+            var element = (VElement) GetElementByTitle(elementTitle);
             element.SendKeys(value);
         }
 
@@ -129,7 +129,7 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("кликает по ссылке")]
         public virtual void PressButton(string elementTitle)
         {
-            var element = (ImlElement) GetElementByTitle(elementTitle);
+            var element = (VElement) GetElementByTitle(elementTitle);
             element.Click();
         }
 
@@ -141,7 +141,7 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("проверяет значение элемента")]
         public virtual void CheckElementValue(string elementTitle, string expectedValue)
         {
-            var element = (ImlElement) GetElementByTitle(elementTitle);
+            var element = (VElement) GetElementByTitle(elementTitle);
             Assert.AreEqual(expectedValue, element.Text, $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
         }
 

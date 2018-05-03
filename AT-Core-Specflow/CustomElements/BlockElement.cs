@@ -8,15 +8,15 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements
 {
-    public abstract class ImlBlockElement : BasePage, IWebElement
+    public abstract class BlockElement : BasePage, IWebElement
     {
-        protected ImlBlockElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
+        protected BlockElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
         {
             Bys = bys;
             _locator = locator;
             CacheLookup = cache;
             Title = elementTitle;
-            PageFactory.InitElements(DriverFactory.GetDriver(), this, new ImlFieldDecorator());
+            PageFactory.InitElements(DriverFactory.GetDriver(), this, new VBlockDecorator());
         }
 
         protected readonly IEnumerable<By> Bys;
