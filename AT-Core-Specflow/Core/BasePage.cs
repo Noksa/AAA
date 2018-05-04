@@ -4,7 +4,10 @@ using System.Linq;
 using System.Reflection;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
+using AT_Core_Specflow.Extensions;
+using AT_Core_Specflow.Extensions.WaitExtensions;
 using AT_Core_Specflow.Helpers;
+using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
 using OpenQA.Selenium.Support.PageObjects;
 using VFieldDecorator = AT_Core_Specflow.Decorators.VFieldDecorator;
@@ -30,12 +33,20 @@ namespace AT_Core_Specflow.Core
 
         public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
         {
-            var method = FindMethodByActionTitle(actionTitle, parameters);
+            var method = HelpFunc.FindMethod(this, actionTitle, parameters);
+            if (method == null)
+                throw new NullReferenceException(
+                    $"Cant find method for action '{actionTitle}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
             try
             {
                 method.Invoke(this, parameters);
+                AssertAll.Throws();
             }
             catch (TargetInvocationException ex)
+            {
+                TakeScreenshotAndThrowRealEx(ex);
+            }
+            catch (MultipleAssertException ex)
             {
                 TakeScreenshotAndThrowRealEx(ex);
             }
@@ -47,47 +58,30 @@ namespace AT_Core_Specflow.Core
             throw ex.GetBaseException();
         }
 
+
         public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, params object[] parameters)
         {
+
+            var block = GetElementByTitle(blockName);
+            var method = HelpFunc.FindMethod(block, actionTitle, parameters);
+            if (method == null)
+                throw new NullReferenceException(
+                    $"Cant find method for action '{actionTitle}' in block '{((BlockTitleAttribute) block.GetType().GetCustomAttribute(typeof(BlockTitleAttribute))).Title}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
             try
             {
-                var block = GetElementByTitle(blockName);
-                var method = FindMethodByActionTitleInBlock(block, actionTitle, parameters);
-                if (method != null)
-                {
-                    method.Invoke(block, parameters);
-                    return;
-                }
-                method = FindMethodByActionTitle(actionTitle, parameters);
-                if (method != null) method.Invoke(this, parameters);
+                method.Invoke(block, parameters);
+                AssertAll.Throws();
+                //method = FindMethodByActionTitle(actionTitle, parameters);
+                //if (method != null) method.Invoke(this, parameters);
             }
             catch (TargetInvocationException ex)
             {
                 TakeScreenshotAndThrowRealEx(ex);
             }
-        }
-
-        private MethodInfo FindMethodByActionTitle(string actionTitle, object[] parameters)
-        {
-            // Ищем метод на дочерней странице. Если там его нет - ищем метод в базовом классе.
-            foreach (var method in GetType().GetMethods())
+            catch (MultipleAssertException ex)
             {
-                if (method.GetCustomAttributes(typeof(ActionTitleAttribute)) is IEnumerable<ActionTitleAttribute> attr && attr.Any(titleAttribute => titleAttribute.ActionTitle == actionTitle &&
-                                               HelpFunc.CheckParamsTypesOfMethod(parameters, method.GetParameters()))) return method;
+                TakeScreenshotAndThrowRealEx(ex);
             }
-            throw  new NullReferenceException($"Cant find method for action '{actionTitle}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
-        }
-
-        private MethodInfo FindMethodByActionTitleInBlock(object block, string actionTitle, object[] parameters)
-        {
-            // Ищем метод в блоке.
-            foreach (var method in block.GetType().GetMethods())
-            {
-                if (method.GetCustomAttributes(typeof(ActionTitleAttribute)) is IEnumerable<ActionTitleAttribute> attr && attr.Any(titleAttribute => titleAttribute.ActionTitle == actionTitle &&
-                                               HelpFunc.CheckParamsTypesOfMethod(parameters, method.GetParameters()))) return method;
-            }
-            throw new NullReferenceException($"Cant find method for action '{actionTitle}' in block '{((BlockTitleAttribute) block.GetType().GetCustomAttribute(typeof(BlockTitleAttribute))).Title}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
-
         }
 
         public object GetElementByTitle(string elementTitle)
@@ -128,6 +122,26 @@ namespace AT_Core_Specflow.Core
             element.Click();
         }
 
+        [ActionTitle("проверяет наличие элемента")]
+        public virtual void CheckElementExists(string elementTitle)
+        {
+            var element = (VElement) GetElementByTitle(elementTitle);
+            element.Wait(TimeSpan.FromSeconds(10)).Until(_ => _.Exists());
+        }
+
+        public virtual void CheckElementExists(List<object> elementTitles)
+        {
+            foreach (var elementTitle in elementTitles)
+            {
+                Assert.Multiple( () =>
+                {
+                    var element = (VElement)GetElementByTitle(elementTitle.ToString());
+                    Assert.True(element.Wait(TimeSpan.FromSeconds(10)).Until(_ => !_.Exists()),
+                        $"Элемент '{element.NameOfElement}' отсутствует на странице '{PageManager.PageContext.PageTitle}'");
+                });
+            }
+        }
+
         [ActionTitle("запоминает значение")]
         public virtual void WriteValueToStash(string value, string variable)
         {
@@ -145,7 +159,7 @@ namespace AT_Core_Specflow.Core
         #region Private Class with help functions
         private static class HelpFunc
         {
-            public static bool CheckParamsTypesOfMethod(object[] methodExpectedParams,
+            private static bool CheckParamsTypesOfMethod(object[] methodExpectedParams,
                 ParameterInfo[] methodActualParams)
             {
                 var listOfParam = methodExpectedParams.Select(param => param.GetType()).ToList();
@@ -155,6 +169,17 @@ namespace AT_Core_Specflow.Core
                     if (listOfParam[i] != methodActualParams[i].ParameterType) result = false;
                 }
                 return result;
+            }
+
+            public static MethodInfo FindMethod(object obj, string actionTitle, object[] parameters)
+            {
+                var allMethods = obj.GetType().GetMethods();
+                var methodName = allMethods.SingleOrDefault(m =>
+                    m.GetCustomAttributes(typeof(ActionTitleAttribute)) is IEnumerable<ActionTitleAttribute>
+                        attr && attr.Any(_ => _.ActionTitle == actionTitle))?.Name;
+                var method = allMethods.SingleOrDefault(_ =>
+                    _.Name == methodName && CheckParamsTypesOfMethod(parameters, _.GetParameters()));
+                return method;
             }
         }
         #endregion

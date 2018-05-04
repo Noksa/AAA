@@ -1,4 +1,5 @@
-﻿using AT_Core_Specflow.Core;
+﻿using System.Collections.Generic;
+using AT_Core_Specflow.Core;
 using AT_Core_Specflow.Hooks;
 using TechTalk.SpecFlow;
 
@@ -10,9 +11,9 @@ namespace AT_Core_Specflow.StepsDefenitions
         #region Actions in pages
 
         [StepDefinition(@"открывается страница ""(.*)""")]
-        public void OpenPage(WrappedString pageTitle)
+        public void OpenPage(string pageTitle)
         {
-            PageManager.PageContext.OpenPage(pageTitle.Value);
+            PageManager.PageContext.OpenPage(pageTitle);
         }
 
         [StepDefinition("^пользователь \\((.*)\\)$")]
@@ -22,15 +23,21 @@ namespace AT_Core_Specflow.StepsDefenitions
         }
 
         [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\"$")]
-        public void ExecuteMethodByTitle(string actionTitle, WrappedString param1)
+        public void ExecuteMethodByTitle(string actionTitle, string param1)
         {
-            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1.Value);
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1);
         }
 
         [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\" (?:значением |со значением | |)\"([^\"]*)\"$")]
-        public void ExecuteMethodByTitle(string actionTitle, WrappedString param1, WrappedString param2)
+        public void ExecuteMethodByTitle(string actionTitle, string param1, string param2)
         {
-            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1.Value, param2.Value);
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1, param2);
+        }
+
+        [StepDefinition("^пользователь \\((.*)\\) из списка$")]
+        public void ExecuteMethodByTitle(string actionTitle, List<object> list)
+        {
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, list);
         }
 
         #endregion

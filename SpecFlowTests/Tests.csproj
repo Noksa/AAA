@@ -77,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blocks\Common\ContactInformationBlock.cs" />
+    <Compile Include="Blocks\Common\NavigationBlock.cs" />
+    <Compile Include="Features\Smoke\MainPageSmoke.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainPageSmoke.feature</DependentUpon>
+    </Compile>
     <Compile Include="LoginTests.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -88,6 +94,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Features\Smoke\MainPageSmoke.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>MainPageSmoke.feature.cs</LastGenOutput>
+    </None>
     <None Include="LoginTests.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>LoginTests.feature.cs</LastGenOutput>

@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using AT_Core_Specflow.Extensions.WaitExtensions;
+using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 
@@ -40,7 +43,6 @@ namespace AT_Core_Specflow.CustomElements
         public Size Size => WrappedElement.Size;
         public string TagName => WrappedElement.TagName;
         public string Text => WrappedElement.Text;
-
         public string NameOfElement
         {
             get
@@ -99,6 +101,11 @@ namespace AT_Core_Specflow.CustomElements
         public void Submit()
         {
             WrappedElement.Submit();
+        }
+
+        public IWaitUntil<VElement> Wait(TimeSpan timespan = default(TimeSpan))
+        {
+            return new BaseWaitTypeChooser<VElement>(this, timespan);
         }
     }
 }

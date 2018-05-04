@@ -13,5 +13,6 @@ namespace SpecFlowTests.Pages
         private VButton loginButton;
 
         private ContactInformationBlock contactInformation;
+        private NavigationBlock navigation;
     }
 }

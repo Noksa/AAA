@@ -6,14 +6,14 @@ namespace AT_Core_Specflow.Helpers
 {
     public static class Stash
     {
-        private static readonly ThreadLocal<Dictionary<string, string>> Dictionary =
-            new ThreadLocal<Dictionary<string, string>>();
+        private static readonly ThreadLocal<Dictionary<string, object>> Dictionary =
+            new ThreadLocal<Dictionary<string, object>>();
 
-        public static Dictionary<string, string> AsDict
+        public static Dictionary<string, object> AsDict
         {
             get
             {
-                if (!Dictionary.IsValueCreated) Dictionary.Value = new Dictionary<string, string>();
+                if (!Dictionary.IsValueCreated) Dictionary.Value = new Dictionary<string, object>();
             return Dictionary.Value;
             }
         }
@@ -24,7 +24,7 @@ namespace AT_Core_Specflow.Helpers
             AsDict.Add(key, value);
         }
 
-        public static string GetValueByKey(string key)
+        public static object GetValueByKey(string key)
         {
             return AsDict.FirstOrDefault(_ => _.Key == key).Value;
         }

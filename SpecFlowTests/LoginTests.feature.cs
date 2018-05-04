@@ -18,8 +18,8 @@ namespace SpecFlowTests
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.3.2.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Попытка войти с неправильными логин\\пароль")]
-    public partial class ПопыткаВойтиСНеправильнымиЛогинПарольFeature
+    [NUnit.Framework.DescriptionAttribute("Попытка войти с неправильным логином либо паролем")]
+    public partial class ПопыткаВойтиСНеправильнымЛогиномЛибоПаролемFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
@@ -31,7 +31,7 @@ namespace SpecFlowTests
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("ru"), "Попытка войти с неправильными логин\\пароль", null, ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("ru"), "Попытка войти с неправильным логином либо паролем", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -64,11 +64,11 @@ namespace SpecFlowTests
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Негативные проверки входа")]
+        [NUnit.Framework.DescriptionAttribute("Негативная проверка входа")]
         [NUnit.Framework.CategoryAttribute("BadLogins")]
         [NUnit.Framework.TestCaseAttribute("РусскийЛогин", "РусскийПароль", null)]
         [NUnit.Framework.TestCaseAttribute("EnglishLogin", "EnglishPassword", null)]
-        public virtual void НегативныеПроверкиВхода(string login, string password, string[] exampleTags)
+        public virtual void НегативнаяПроверкаВхода(string login, string password, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "BadLogins"};
@@ -76,7 +76,7 @@ namespace SpecFlowTests
             {
                 @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
             }
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Негативные проверки входа", @__tags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Негативная проверка входа", @__tags);
 #line 4
 this.ScenarioSetup(scenarioInfo);
 #line 5

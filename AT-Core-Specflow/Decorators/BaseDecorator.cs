@@ -74,8 +74,10 @@ namespace AT_Core_Specflow.Decorators
 
         protected string GetElementTitle(MemberInfo member, Type targetType)
         {
-            var elementTitleAttribute = targetType.BaseType == typeof(BlockElement) ? targetType.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute : member.GetCustomAttribute(typeof(ElementTitleAttribute), true) as ElementTitleAttribute;
-            return elementTitleAttribute != null ? elementTitleAttribute.Name : "";
+            if (targetType.BaseType == typeof(BlockElement) &&
+                targetType.GetCustomAttribute(typeof(BlockTitleAttribute), true) is BlockTitleAttribute blockAttr)
+                return blockAttr.Title;
+            return ((ElementTitleAttribute) member.GetCustomAttribute(typeof(ElementTitleAttribute), true)).Name;
         }
 
         protected bool CheckElementType(Type targetType)
