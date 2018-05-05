@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Allure.Commons;
-using NUnit.Framework;
 
 namespace AT_Core_Specflow.Helpers
 {

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using Allure.Commons;
 using AT_Core_Specflow.Core;
+using AT_Core_Specflow.Extensions;
 using AT_Core_Specflow.Helpers;
 using IML_AT_Core.Core;
 using NUnit.Framework;
@@ -26,11 +27,10 @@ namespace AT_Core_Specflow.Hooks
         {
             AllureLifecycle.Instance.CleanupResultDirectory();
         }
+
         [BeforeScenario]
         public virtual void Setup()
         {
-            
-            Stash.AsDict.Clear();
             PageManager.AddAllPagesToList();
             var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
             if (!parsed)
@@ -56,7 +56,7 @@ namespace AT_Core_Specflow.Hooks
         private void AddTestVariablesToReport()
         {
             var list = new List<StepResult>();
-            Stash.AsDict.ToList().ForEach(_ =>
+            CoreSteps.ScenarioContext.ToList().Where(_ => _.Key.StartsWith("~")).ToList().ForEach(_ =>
             {
                 var step = new StepResult
                 {

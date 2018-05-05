@@ -88,19 +88,16 @@
     <Compile Include="CustomElements\Elements\VLink.cs" />
     <Compile Include="Decorators\BaseDecorator.cs" />
     <Compile Include="Decorators\VBlockDecorator.cs" />
-    <Compile Include="Extensions\AssertAll.cs" />
     <Compile Include="Extensions\WaitExtensions\BaseWaitTypeChooser.cs" />
     <Compile Include="Extensions\WaitExtensions\Interfaces\IPageWaitConditions.cs" />
     <Compile Include="Extensions\WaitExtensions\Interfaces\IWaitUntil{T}.cs" />
     <Compile Include="Extensions\WaitExtensions\PageWaitConditions.cs" />
     <Compile Include="Extensions\WaitExtensions\WaitExtension.cs" />
     <Compile Include="Helpers\AllureSteps.cs" />
-    <Compile Include="Helpers\Contexts.cs" />
-    <Compile Include="Helpers\Stash.cs" />
-    <Compile Include="Helpers\StringExtension.cs" />
-    <Compile Include="Hooks\ArgumentsTransformation.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Hooks\Transforms.cs" />
     <Compile Include="Hooks\BaseTestConfig.cs" />
-    <Compile Include="StepsDefenitions\CommonSteps.cs" />
+    <Compile Include="Hooks\CoreSteps.cs" />
     <Compile Include="CustomElements\Attributes\ActionTitleAttribute.cs" />
     <Compile Include="CustomElements\Attributes\ElementTitleAttribute.cs" />
     <Compile Include="CustomElements\Attributes\FindByAttribute.cs" />
@@ -121,7 +118,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="StepsDefenitions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

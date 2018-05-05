@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace AT_Core_Specflow.Helpers
+namespace AT_Core_Specflow.Extensions
 {
     public static class StringExtension
     {

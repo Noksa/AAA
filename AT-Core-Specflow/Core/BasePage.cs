@@ -4,9 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
-using AT_Core_Specflow.Extensions;
 using AT_Core_Specflow.Extensions.WaitExtensions;
-using AT_Core_Specflow.Helpers;
 using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
 using OpenQA.Selenium.Support.PageObjects;
@@ -40,24 +38,16 @@ namespace AT_Core_Specflow.Core
             try
             {
                 method.Invoke(this, parameters);
-                AssertAll.Throws();
             }
             catch (TargetInvocationException ex)
             {
-                TakeScreenshotAndThrowRealEx(ex);
+                HelpFunc.TakeScreenshotAndThrowRealEx(ex);
             }
             catch (MultipleAssertException ex)
             {
-                TakeScreenshotAndThrowRealEx(ex);
+                HelpFunc.TakeScreenshotAndThrowRealEx(ex);
             }
         }
-
-        private static void TakeScreenshotAndThrowRealEx(Exception ex)
-        {
-            DriverFactory.MakeScreenshot();
-            throw ex.GetBaseException();
-        }
-
 
         public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, params object[] parameters)
         {
@@ -70,17 +60,14 @@ namespace AT_Core_Specflow.Core
             try
             {
                 method.Invoke(block, parameters);
-                AssertAll.Throws();
-                //method = FindMethodByActionTitle(actionTitle, parameters);
-                //if (method != null) method.Invoke(this, parameters);
             }
             catch (TargetInvocationException ex)
             {
-                TakeScreenshotAndThrowRealEx(ex);
+                HelpFunc.TakeScreenshotAndThrowRealEx(ex);
             }
             catch (MultipleAssertException ex)
             {
-                TakeScreenshotAndThrowRealEx(ex);
+                HelpFunc.TakeScreenshotAndThrowRealEx(ex);
             }
         }
 
@@ -103,8 +90,7 @@ namespace AT_Core_Specflow.Core
                 $"Cant find element with name '{elementTitle}' in block '{blockName}' at page '{PageManager.PageContext.PageTitle}'");
 
         }
-
-
+        
         #region Actions
 
         [ActionTitle("заполняет поле")]
@@ -145,8 +131,9 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("запоминает значение")]
         public virtual void WriteValueToStash(string value, string variable)
         {
-            Stash.Add(variable, value);
+            CoreSteps.ScenarioContext.Add(variable, value);
         }
+
         [ActionTitle("проверяет значение элемента")]
         public virtual void CheckElementValue(string elementTitle, string expectedValue)
         {
@@ -180,6 +167,12 @@ namespace AT_Core_Specflow.Core
                 var method = allMethods.SingleOrDefault(_ =>
                     _.Name == methodName && CheckParamsTypesOfMethod(parameters, _.GetParameters()));
                 return method;
+            }
+
+            public static void TakeScreenshotAndThrowRealEx(Exception ex)
+            {
+                DriverFactory.MakeScreenshot();
+                throw ex.GetBaseException();
             }
         }
         #endregion

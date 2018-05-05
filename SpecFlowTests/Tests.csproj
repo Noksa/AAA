@@ -83,7 +83,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MainPageSmoke.feature</DependentUpon>
     </Compile>
-    <Compile Include="LoginTests.feature.cs">
+    <Compile Include="Features\Authorization\LoginTests.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LoginTests.feature</DependentUpon>
@@ -98,7 +98,7 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>MainPageSmoke.feature.cs</LastGenOutput>
     </None>
-    <None Include="LoginTests.feature">
+    <None Include="Features\Authorization\LoginTests.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>LoginTests.feature.cs</LastGenOutput>
     </None>
