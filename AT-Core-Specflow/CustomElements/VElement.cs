@@ -105,6 +105,7 @@ namespace AT_Core_Specflow.CustomElements
 
         public IWaitUntil<VElement> Wait(TimeSpan timespan = default(TimeSpan))
         {
+            if (timespan == default(TimeSpan)) timespan = TimeSpan.FromSeconds(5);
             return new BaseWaitTypeChooser<VElement>(this, timespan);
         }
     }

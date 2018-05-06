@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using AT_Core_Specflow.Core;
 using AT_Core_Specflow.Decorators;
+using AT_Core_Specflow.Extensions.WaitExtensions;
+using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 
@@ -42,21 +45,6 @@ namespace AT_Core_Specflow.CustomElements
         public Size Size => WrappedElement.Size;
         public string TagName => WrappedElement.TagName;
         public string Text => WrappedElement.Text;
-
-        public string NameOfElement
-        {
-            get
-            {
-                if (Title.Length != 0) return Title;
-                var text = WrappedElement.GetAttribute("text");
-                var value = WrappedElement.GetAttribute("value");
-                if (!string.IsNullOrEmpty(value))
-                {
-                    return value;
-                }
-                return !string.IsNullOrEmpty(text) ? text : WrappedElement.ToString();
-            }
-        }
 
         public void Clear()
         {
@@ -101,6 +89,12 @@ namespace AT_Core_Specflow.CustomElements
         public void Submit()
         {
             WrappedElement.Submit();
+        }
+
+        public IWaitUntil<BlockElement> Wait(TimeSpan timespan = default(TimeSpan))
+        {
+            if (timespan == default(TimeSpan)) timespan = TimeSpan.FromSeconds(5);
+            return new BaseWaitTypeChooser<BlockElement>(this, timespan);
         }
     }
 }

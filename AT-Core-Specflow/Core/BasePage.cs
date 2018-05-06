@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
+using AT_Core_Specflow.CustomElements.Elements;
 using AT_Core_Specflow.Extensions.WaitExtensions;
 using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
@@ -111,22 +112,40 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("проверяет наличие элемента")]
         public virtual void CheckElementExists(string elementTitle)
         {
-            var element = (VElement) GetElementByTitle(elementTitle);
-            element.Wait(TimeSpan.FromSeconds(10)).Until(_ => _.Exists());
+            var result = false;
+            switch (GetElementByTitle(elementTitle))
+            {
+                case VElement element:
+                    result = element.Wait().Until(_ => _.Exists());
+                    break;
+                case BlockElement block:
+                    result = block.Wait().Until(_ => _.Exists());
+                    break;
+            }
+            Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
         }
 
         public virtual void CheckElementExists(List<object> elementTitles)
         {
-            foreach (var elementTitle in elementTitles)
+            Assert.Multiple(() =>
             {
-                Assert.Multiple( () =>
+                foreach (var elementTitle in elementTitles)
                 {
-                    var element = (VElement)GetElementByTitle(elementTitle.ToString());
-                    Assert.True(element.Wait(TimeSpan.FromSeconds(10)).Until(_ => !_.Exists()),
-                        $"Элемент '{element.NameOfElement}' отсутствует на странице '{PageManager.PageContext.PageTitle}'");
-                });
-            }
+                    var result = false;
+                    switch (GetElementByTitle(elementTitle.ToString()))
+                    {
+                        case VElement element:
+                            result = element.Wait().Until(_ => _.Exists());
+                            break;
+                        case BlockElement block:
+                            result = block.Wait().Until(_ => _.Exists());
+                            break;
+                    }
+                    Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
+                }
+            });
         }
+
 
         [ActionTitle("запоминает значение")]
         public virtual void WriteValueToStash(string value, string variable)

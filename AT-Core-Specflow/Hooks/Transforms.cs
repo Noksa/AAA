@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using TechTalk.SpecFlow;
-using TechTalk.SpecFlow.Assist;
 
 namespace AT_Core_Specflow.Hooks
 {

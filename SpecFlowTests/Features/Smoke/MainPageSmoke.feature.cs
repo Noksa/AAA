@@ -80,7 +80,9 @@ this.ScenarioSetup(scenarioInfo);
             table1.AddRow(new string[] {
                         "Войти"});
             table1.AddRow(new string[] {
-                        "Войти"});
+                        "Контактная информация"});
+            table1.AddRow(new string[] {
+                        "Навигация"});
 #line 6
     testRunner.Then("пользователь (проверяет наличие элемента) из списка", ((string)(null)), table1, "Тогда ");
 #line hidden
