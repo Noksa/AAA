@@ -5,29 +5,31 @@ using System.Reflection;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.CustomElements.Elements;
+using AT_Core_Specflow.Decorators;
 using AT_Core_Specflow.Extensions.WaitExtensions;
+using AT_Core_Specflow.Helpers;
 using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
 using OpenQA.Selenium.Support.PageObjects;
-using VFieldDecorator = AT_Core_Specflow.Decorators.VFieldDecorator;
+
 namespace AT_Core_Specflow.Core
 {
     public abstract class BasePage
     {
         protected bool IsUsedBlock { get; }
-        private readonly object _usedBlock;
+        private readonly ABlockElement _usedBlock;
 
         protected BasePage()
         {
-            if (GetType().BaseType == typeof(AoBlockElement))
+            if (GetType().BaseType == typeof(ABlockElement))
             {
                 IsUsedBlock = true;
-                _usedBlock = this;
+                _usedBlock = (ABlockElement) this;
                 return;
             }
             PageManager.PageContext.Elements.Clear();
             PageManager.PageContext.ElementsInBlocks.Clear();
-            PageFactory.InitElements(DriverFactory.GetDriver(), this, new VFieldDecorator());
+            PageFactory.InitElements(DriverFactory.GetDriver(), this, new AFieldDecorator());
         }
 
         public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
@@ -44,10 +46,6 @@ namespace AT_Core_Specflow.Core
             {
                 HelpFunc.TakeScreenshotAndThrowRealEx(ex);
             }
-            catch (MultipleAssertException ex)
-            {
-                HelpFunc.TakeScreenshotAndThrowRealEx(ex);
-            }
         }
 
         public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, params object[] parameters)
@@ -57,16 +55,12 @@ namespace AT_Core_Specflow.Core
             var method = HelpFunc.FindMethod(block, actionTitle, parameters);
             if (method == null)
                 throw new NullReferenceException(
-                    $"Cant find method for action '{actionTitle}' in block '{((BlockTitleAttribute) block.GetType().GetCustomAttribute(typeof(BlockTitleAttribute))).Title}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
+                    $"Cant find method for action '{actionTitle}' in block '{_usedBlock.Title}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
             try
             {
                 method.Invoke(block, parameters);
             }
             catch (TargetInvocationException ex)
-            {
-                HelpFunc.TakeScreenshotAndThrowRealEx(ex);
-            }
-            catch (MultipleAssertException ex)
             {
                 HelpFunc.TakeScreenshotAndThrowRealEx(ex);
             }
@@ -81,9 +75,7 @@ namespace AT_Core_Specflow.Core
                 throw new NullReferenceException(
                     $"Cant find element with title '{elementTitle}' at page '{PageManager.PageContext.PageTitle}'");
             }
-            var blockName =
-                ((ElementTitleAttribute) _usedBlock.GetType().GetCustomAttribute(typeof(ElementTitleAttribute)))
-                .Name;
+            var blockName = _usedBlock.Title;
             var elementInBlock = PageManager.PageContext.ElementsInBlocks.FirstOrDefault(b => b.Key == blockName).Value
                 .FirstOrDefault(ele => ele.Value == elementTitle).Key;
             if (elementInBlock != null) return elementInBlock;
@@ -97,16 +89,18 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("заполняет поле")]
         public virtual void FillField(string elementTitle, string value)
         {
-            var element = (AoElement) GetElementByTitle(elementTitle);
+            var element = (AElement) GetElementByTitle(elementTitle);
             element.SendKeys(value);
+            AllureSteps.AddSingleStep($"Поле '{elementTitle}' заполнено значением '{value}'");
         }
 
         [ActionTitle("нажимает кнопку")]
         [ActionTitle("кликает по ссылке")]
         public virtual void PressButton(string elementTitle)
         {
-            var element = (AoElement) GetElementByTitle(elementTitle);
+            var element = (AElement) GetElementByTitle(elementTitle);
             element.Click();
+            AllureSteps.AddSingleStep($"Произведён клик по элементу '{elementTitle}'");
         }
 
         [ActionTitle("проверяет наличие элемента")]
@@ -115,10 +109,10 @@ namespace AT_Core_Specflow.Core
             var result = false;
             switch (GetElementByTitle(elementTitle))
             {
-                case AoElement element:
+                case AElement element:
                     result = element.Wait().Until(_ => _.Exists());
                     break;
-                case AoBlockElement block:
+                case ABlockElement block:
                     result = block.Wait().Until(_ => _.Exists());
                     break;
             }
@@ -134,14 +128,15 @@ namespace AT_Core_Specflow.Core
                     var result = false;
                     switch (GetElementByTitle(elementTitle.ToString()))
                     {
-                        case AoElement element:
+                        case AElement element:
                             result = element.Wait().Until(_ => _.Exists());
                             break;
-                        case AoBlockElement block:
+                        case ABlockElement block:
                             result = block.Wait().Until(_ => _.Exists());
                             break;
                     }
                     Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
+                    AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
                 }
             });
         }
@@ -156,8 +151,9 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("проверяет значение элемента")]
         public virtual void CheckElementValue(string elementTitle, string expectedValue)
         {
-            var element = (AoElement) GetElementByTitle(elementTitle);
+            var element = (AElement) GetElementByTitle(elementTitle);
             Assert.AreEqual(expectedValue, element.Text, $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
+            AllureSteps.AddSingleStep($"Проверено значение элемента '{elementTitle}' со значением '{expectedValue}'");
         }
 
         #endregion

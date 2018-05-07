@@ -6,9 +6,9 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements
 {
-    public class AoList<T> : IList<T>
+    public class AList<T> : IList<T>
     {
-        public AoList(IElementLocator locator, IEnumerable<By> bys, bool cache)
+        public AList(IElementLocator locator, IEnumerable<By> bys, bool cache)
         {
             _locator = locator;
             Bys = bys;

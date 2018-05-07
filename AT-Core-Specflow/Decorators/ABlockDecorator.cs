@@ -6,15 +6,14 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 namespace AT_Core_Specflow.Decorators
 {
-    public class VBlockDecorator : BaseDecorator, IPageObjectMemberDecorator
+    public class ABlockDecorator : BaseDecorator, IPageObjectMemberDecorator
     {
         public object Decorate(MemberInfo member, IElementLocator locator)
         {
             if (!FieldNeedDecorated(member)) return null;
-            var elementTitle = "";
             var cache = ShouldCacheLookup(member);
             var targetType = GetElementType(member);
-            elementTitle = GetElementTitle(member, targetType);
+            var elementTitle = GetElementTitle(member, targetType);
 
             IList<By> bys = CreateLocatorList(member, targetType);
             if (bys.Count <= 0) return null;

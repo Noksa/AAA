@@ -31,7 +31,7 @@ namespace AT_Core_Specflow.Decorators
 
         protected static ReadOnlyCollection<By> CreateLocatorList(MemberInfo member, Type targetType)
         {
-            var bys = targetType.BaseType == typeof(AoBlockElement) ? (targetType.GetCustomAttribute(typeof(FindByAttribute), true) as FindByAttribute)?.Bys : (member.GetCustomAttribute(typeof(FindByAttribute), true) as FindByAttribute)?.Bys;
+            var bys = targetType.BaseType == typeof(ABlockElement) ? (targetType.GetCustomAttribute(typeof(FindByAttribute), true) as FindByAttribute)?.Bys : (member.GetCustomAttribute(typeof(FindByAttribute), true) as FindByAttribute)?.Bys;
             if (bys == null) throw new NullReferenceException($"Элемент \"{member.Name}\" не имеет аттрибут FindBy.\nДля поиска элемента добавьте аттрибут.");
             var useAll = bys.Count > 1;
             if (bys.Count == 0) return new List<By>().AsReadOnly();
@@ -53,8 +53,8 @@ namespace AT_Core_Specflow.Decorators
         protected static bool FieldNeedDecorated(MemberInfo member)
         {
             var baseType = member.DeclaringType?.BaseType;
-            if (member.DeclaringType == typeof(AoBlockElement) || member.DeclaringType == typeof(BasePage)) return false;
-            return baseType == typeof(BasePage) || baseType == typeof(AoBlockElement);
+            if (member.DeclaringType == typeof(ABlockElement) || member.DeclaringType == typeof(BasePage)) return false;
+            return baseType == typeof(BasePage) || baseType == typeof(ABlockElement);
         }
 
         protected Type GetElementType(MemberInfo member)
@@ -74,7 +74,7 @@ namespace AT_Core_Specflow.Decorators
 
         protected string GetElementTitle(MemberInfo member, Type targetType)
         {
-            if (targetType.BaseType == typeof(AoBlockElement) &&
+            if (targetType.BaseType == typeof(ABlockElement) &&
                 targetType.GetCustomAttribute(typeof(BlockTitleAttribute), true) is BlockTitleAttribute blockAttr)
                 return blockAttr.Title;
             return ((ElementTitleAttribute) member.GetCustomAttribute(typeof(ElementTitleAttribute), true)).Name;
@@ -82,8 +82,8 @@ namespace AT_Core_Specflow.Decorators
 
         protected bool CheckElementType(Type targetType)
         {
-            return targetType.BaseType == typeof(AoElement) || targetType.BaseType == typeof(AoBlockElement) ||
-                   targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(AoList<>);
+            return targetType.BaseType == typeof(AElement) || targetType.BaseType == typeof(ABlockElement) ||
+                   targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(AList<>);
         }
     }
 }

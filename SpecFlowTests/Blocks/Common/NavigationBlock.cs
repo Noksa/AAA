@@ -9,18 +9,18 @@ namespace SpecFlowTests.Blocks.Common
 {
     [BlockTitle("Навигация")]
     [FindBy(Css = "div[class=\'block1\']")]
-    public class NavigationBlock : AoBlockElement
+    public class NavigationBlock : ABlockElement
     {
         public NavigationBlock(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         {
         }
         [FindBy(Css = "a[href=\'/about/history\']")]
         [ElementTitle("О компании")]
-        private AoLink aboutCompany;
+        private ALink aboutCompany;
 
         [FindBy(XPath = "//a[@href=\'/specials/c2c\']")]
         [ElementTitle("Частным лицам")]
-        private AoLink individuals;
+        private ALink individuals;
 
     }
 }

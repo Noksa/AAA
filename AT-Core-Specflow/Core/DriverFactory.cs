@@ -48,9 +48,6 @@ namespace AT_Core_Specflow.Core
                     throw new ArgumentNullException($"Неизвестный тип драйвера \"{browserType}\". Невозможно проинициализировать драйвер.");
             }
             Driver.Value.Manage().Window.Maximize();
-            int.TryParse(ConfigurationManager.AppSettings.Get("ImplicitWait"), out var defaultWait);
-            if (defaultWait == 0) defaultWait = 60;
-            Driver.Value.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(defaultWait); // hardcode default timeout
         }
 
 

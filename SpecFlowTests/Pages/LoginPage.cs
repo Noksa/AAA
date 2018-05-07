@@ -1,6 +1,8 @@
 ﻿using AT_Core_Specflow.Core;
 using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.CustomElements.Elements;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.PageObjects;
 
 namespace SpecFlowTests.Pages
 {
@@ -9,18 +11,19 @@ namespace SpecFlowTests.Pages
     {
         [FindBy(Id = "txtUser")]
         [ElementTitle("Логин")]
-        private AoTextInput login;
+        private ATextInput login;
 
         [FindBy(Id = "txtPass")]
         [ElementTitle("Пароль")]
-        private AoTextInput password;
+        private ATextInput password;
 
         [FindBy(Id = "Button1")]
         [ElementTitle("Войти")]
-        private AoButton enterButton;
+        private AButton enterButton;
 
         [FindBy(Id = "errorMsg")]
         [ElementTitle("Текст ошибки")]
-        private AoTextLabel errorMsg;
+        private ATextLabel errorMsg;
+        
     }
 }
