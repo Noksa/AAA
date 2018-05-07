@@ -19,7 +19,7 @@ namespace AT_Core_Specflow.Core
 
         protected BasePage()
         {
-            if (GetType().BaseType == typeof(BlockElement))
+            if (GetType().BaseType == typeof(AoBlockElement))
             {
                 IsUsedBlock = true;
                 _usedBlock = this;
@@ -97,7 +97,7 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("заполняет поле")]
         public virtual void FillField(string elementTitle, string value)
         {
-            var element = (VElement) GetElementByTitle(elementTitle);
+            var element = (AoElement) GetElementByTitle(elementTitle);
             element.SendKeys(value);
         }
 
@@ -105,7 +105,7 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("кликает по ссылке")]
         public virtual void PressButton(string elementTitle)
         {
-            var element = (VElement) GetElementByTitle(elementTitle);
+            var element = (AoElement) GetElementByTitle(elementTitle);
             element.Click();
         }
 
@@ -115,10 +115,10 @@ namespace AT_Core_Specflow.Core
             var result = false;
             switch (GetElementByTitle(elementTitle))
             {
-                case VElement element:
+                case AoElement element:
                     result = element.Wait().Until(_ => _.Exists());
                     break;
-                case BlockElement block:
+                case AoBlockElement block:
                     result = block.Wait().Until(_ => _.Exists());
                     break;
             }
@@ -134,10 +134,10 @@ namespace AT_Core_Specflow.Core
                     var result = false;
                     switch (GetElementByTitle(elementTitle.ToString()))
                     {
-                        case VElement element:
+                        case AoElement element:
                             result = element.Wait().Until(_ => _.Exists());
                             break;
-                        case BlockElement block:
+                        case AoBlockElement block:
                             result = block.Wait().Until(_ => _.Exists());
                             break;
                     }
@@ -156,7 +156,7 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("проверяет значение элемента")]
         public virtual void CheckElementValue(string elementTitle, string expectedValue)
         {
-            var element = (VElement) GetElementByTitle(elementTitle);
+            var element = (AoElement) GetElementByTitle(elementTitle);
             Assert.AreEqual(expectedValue, element.Text, $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
         }
 

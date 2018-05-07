@@ -4,9 +4,9 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements.Elements
 {
-    public class VTextInput : VElement
+    public class AoButton : AoElement
     {
-        public VTextInput(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
+        public AoButton(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         {
         }
     }

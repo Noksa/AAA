@@ -4,9 +4,9 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements.Elements
 {
-    public class VTextLabel : VElement
+    public class AoTextLabel : AoElement
     {
-        public VTextLabel(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
+        public AoTextLabel(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         {
         }
     }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using AT_Core_Specflow.Core;
-using AT_Core_Specflow.Decorators;
 using AT_Core_Specflow.Extensions.WaitExtensions;
 using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
@@ -11,23 +9,13 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements
 {
-    public abstract class BlockElement : BasePage, IWebElement
+    public class AoElement : IWebElement
     {
-        protected BlockElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
-        {
-            Bys = bys;
-            _locator = locator;
-            CacheLookup = cache;
-            Title = elementTitle;
-            PageFactory.InitElements(DriverFactory.GetDriver(), this, new VBlockDecorator());
-        }
-
         protected readonly IEnumerable<By> Bys;
         protected bool CacheLookup;
         protected string Title { get; set; }
         private readonly IElementLocator _locator;
         private IWebElement _realElement;
-        
 
         private IWebElement WrappedElement
         {
@@ -38,6 +26,16 @@ namespace AT_Core_Specflow.CustomElements
             }
         }
 
+
+
+        public AoElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
+        {
+            Bys = bys;
+            CacheLookup = cache;
+            _locator = locator;
+            Title = elementTitle;
+        }
+
         public bool Displayed => WrappedElement.Displayed;
         public bool Enabled => WrappedElement.Enabled;
         public Point Location => WrappedElement.Location;
@@ -45,6 +43,20 @@ namespace AT_Core_Specflow.CustomElements
         public Size Size => WrappedElement.Size;
         public string TagName => WrappedElement.TagName;
         public string Text => WrappedElement.Text;
+        public string NameOfElement
+        {
+            get
+            {
+                if (Title.Length != 0) return Title;
+                var text = WrappedElement.GetAttribute("text");
+                var value = WrappedElement.GetAttribute("value");
+                if (!string.IsNullOrEmpty(value))
+                {
+                    return value;
+                }
+                return !string.IsNullOrEmpty(text) ? text : WrappedElement.ToString();
+            }
+        }
 
         public void Clear()
         {
@@ -83,7 +95,7 @@ namespace AT_Core_Specflow.CustomElements
 
         public void SendKeys(string text)
         {
-            WrappedElement.SendKeys(text);
+           WrappedElement.SendKeys(text);
         }
 
         public void Submit()
@@ -91,11 +103,10 @@ namespace AT_Core_Specflow.CustomElements
             WrappedElement.Submit();
         }
 
-        public IWaitUntil<BlockElement> Wait(TimeSpan timespan = default(TimeSpan))
+        public IWaitUntil<AoElement> Wait(TimeSpan timespan = default(TimeSpan))
         {
             if (timespan == default(TimeSpan)) timespan = TimeSpan.FromSeconds(5);
-            return new BaseWaitTypeChooser<BlockElement>(this, timespan);
+            return new BaseWaitTypeChooser<AoElement>(this, timespan);
         }
     }
 }
-

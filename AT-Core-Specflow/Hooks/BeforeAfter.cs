@@ -14,7 +14,7 @@ using DriverFactory = AT_Core_Specflow.Core.DriverFactory;
 namespace AT_Core_Specflow.Hooks
 {
     [Binding]
-    public class BaseTestConfig
+    public class BeforeAfter
     {
         protected Browser Browser;
         protected string Url;

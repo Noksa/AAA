@@ -9,7 +9,7 @@ namespace SpecFlowTests.Blocks.Common
 {
     [FindBy(ClassName = "block9")]
     [BlockTitle("Контактная информация")]
-    public class ContactInformationBlock : BlockElement
+    public class ContactInformationBlock : AoBlockElement
     {
         public ContactInformationBlock(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         { 
@@ -18,7 +18,7 @@ namespace SpecFlowTests.Blocks.Common
 
         [ElementTitle("Адрес")]
         [FindBy(XPath = "//p[@class = \'home\']")]
-        private VTextLabel address;
+        private AoTextLabel address;
 
 
     }

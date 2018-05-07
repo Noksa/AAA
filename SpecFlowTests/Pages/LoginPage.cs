@@ -9,18 +9,18 @@ namespace SpecFlowTests.Pages
     {
         [FindBy(Id = "txtUser")]
         [ElementTitle("Логин")]
-        private VTextInput login;
+        private AoTextInput login;
 
         [FindBy(Id = "txtPass")]
         [ElementTitle("Пароль")]
-        private VTextInput password;
+        private AoTextInput password;
 
         [FindBy(Id = "Button1")]
         [ElementTitle("Войти")]
-        private VButton enterButton;
+        private AoButton enterButton;
 
         [FindBy(Id = "errorMsg")]
         [ElementTitle("Текст ошибки")]
-        private VTextLabel errorMsg;
+        private AoTextLabel errorMsg;
     }
 }
