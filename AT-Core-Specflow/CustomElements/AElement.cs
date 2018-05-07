@@ -52,20 +52,6 @@ namespace AT_Core_Specflow.CustomElements
         public Size Size => WrappedElement.Size;
         public string TagName => WrappedElement.TagName;
         public string Text => WrappedElement.Text;
-        public string NameOfElement
-        {
-            get
-            {
-                if (Title.Length != 0) return Title;
-                var text = WrappedElement.GetAttribute("text");
-                var value = WrappedElement.GetAttribute("value");
-                if (!string.IsNullOrEmpty(value))
-                {
-                    return value;
-                }
-                return !string.IsNullOrEmpty(text) ? text : WrappedElement.ToString();
-            }
-        }
 
         public void Clear()
         {

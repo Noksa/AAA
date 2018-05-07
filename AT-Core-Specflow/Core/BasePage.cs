@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
-using AT_Core_Specflow.CustomElements.Elements;
 using AT_Core_Specflow.Decorators;
+using AT_Core_Specflow.Extensions;
 using AT_Core_Specflow.Extensions.WaitExtensions;
 using AT_Core_Specflow.Helpers;
 using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.Core
@@ -106,16 +107,8 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("проверяет наличие элемента")]
         public virtual void CheckElementExists(string elementTitle)
         {
-            var result = false;
-            switch (GetElementByTitle(elementTitle))
-            {
-                case AElement element:
-                    result = element.Wait().Until(_ => _.Exists());
-                    break;
-                case ABlockElement block:
-                    result = block.Wait().Until(_ => _.Exists());
-                    break;
-            }
+            var element = GetElementByTitle(elementTitle) as IWebElement;
+            var result = element.Wait().Until(_ => _.Exists());
             Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
         }
 
@@ -125,35 +118,40 @@ namespace AT_Core_Specflow.Core
             {
                 foreach (var elementTitle in elementTitles)
                 {
-                    var result = false;
-                    switch (GetElementByTitle(elementTitle.ToString()))
-                    {
-                        case AElement element:
-                            result = element.Wait().Until(_ => _.Exists());
-                            break;
-                        case ABlockElement block:
-                            result = block.Wait().Until(_ => _.Exists());
-                            break;
-                    }
+                    var element = GetElementByTitle(elementTitle.ToString()) as IWebElement;
+                    var result =  element.Wait().Until(_ => _.Exists());
                     Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
                     AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
                 }
             });
         }
 
-
         [ActionTitle("запоминает значение")]
         public virtual void WriteValueToStash(string value, string variable)
         {
+            CoreSteps.ScenarioContext.Add(variable, value);
+        }
+        [ActionTitle("запоминает значение элемента")]
+        public virtual void WriteElementValueToStash(string elementTitle, string variable)
+        {
+            var element = GetElementByTitle(elementTitle) as IWebElement;
+            var value = element.GetValue();
             CoreSteps.ScenarioContext.Add(variable, value);
         }
 
         [ActionTitle("проверяет значение элемента")]
         public virtual void CheckElementValue(string elementTitle, string expectedValue)
         {
-            var element = (AElement) GetElementByTitle(elementTitle);
-            Assert.AreEqual(expectedValue, element.Text, $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
+            var element = GetElementByTitle(elementTitle) as IWebElement;
+            Assert.AreEqual(expectedValue, element.GetValue(), $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
             AllureSteps.AddSingleStep($"Проверено значение элемента '{elementTitle}' со значением '{expectedValue}'");
+        }
+
+        [ActionTitle("отмечает чек-бокс")]
+        public virtual void SetCheckBox(string elementTitle)
+        {
+            var checkbox = GetElementByTitle(elementTitle) as IWebElement;
+            if (!checkbox.Selected) checkbox.Click();
         }
 
         #endregion
