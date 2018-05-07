@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using PageTitleAttribute = AT_Core_Specflow.CustomElements.Attributes.PageTitleAttribute;
+using AT_Core_Specflow.CustomElements.Attributes;
 
 namespace AT_Core_Specflow.Core
 {

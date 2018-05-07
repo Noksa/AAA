@@ -1,4 +1,4 @@
-﻿namespace IML_AT_Core.Core
+﻿namespace AT_Core_Specflow.Core
 {
     public enum Browser
     {

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Threading;
 using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
-using OpenQA.Selenium;
 
 namespace AT_Core_Specflow.Extensions.WaitExtensions
 {

@@ -6,10 +6,7 @@ using Allure.Commons;
 using AT_Core_Specflow.Core;
 using AT_Core_Specflow.Extensions;
 using AT_Core_Specflow.Helpers;
-using IML_AT_Core.Core;
-using NUnit.Framework;
 using TechTalk.SpecFlow;
-using DriverFactory = AT_Core_Specflow.Core.DriverFactory;
 
 namespace AT_Core_Specflow.Hooks
 {

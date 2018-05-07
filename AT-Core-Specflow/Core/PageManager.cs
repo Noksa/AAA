@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Internal;
-using PageTitleAttribute = AT_Core_Specflow.CustomElements.Attributes.PageTitleAttribute;
+using AT_Core_Specflow.CustomElements.Attributes;
 
 namespace AT_Core_Specflow.Core
 {
