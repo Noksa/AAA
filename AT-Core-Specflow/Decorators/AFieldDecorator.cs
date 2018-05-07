@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using AT_Core_Specflow.Core;
+using AT_Core_Specflow.CustomElements;
 using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.Decorators
@@ -20,10 +21,11 @@ namespace AT_Core_Specflow.Decorators
             {
                 var element = Activator.CreateInstance(targetType, locator, bys, cache, elementTitle);
                 PageManager.PageContext.Elements.Add(element, elementTitle);
+                SetTimeOutSearch(member, targetType, element);
                 return element;
             }
             throw new NotImplementedException(
-                $"Класс элемента \"{member.DeclaringType}.{targetType.Name}\" не является классом, который может быть декорирован.\nДекорирование возможно для класса \"AList<>\", а так же для наследников классов \"ABlockElement\" и \"AElement\"");
+                $"Класс элемента \"{member.DeclaringType}.{targetType.Name}\" не является классом, который может быть декорирован.\nДекорирование возможно для класса \"AList<>\", а так же для наследников классов \"ABlock\" и \"AProxyElement\"");
         }
     }
 }

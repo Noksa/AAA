@@ -4,7 +4,7 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements.Elements
 {
-    public class ATextLabel : AElement
+    public class ATextLabel : AProxyElement
     {
         public ATextLabel(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         {

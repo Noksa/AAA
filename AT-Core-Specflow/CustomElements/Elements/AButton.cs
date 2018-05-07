@@ -4,7 +4,7 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements.Elements
 {
-    public class AButton : AElement
+    public class AButton : AProxyElement
     {
         public AButton(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         {

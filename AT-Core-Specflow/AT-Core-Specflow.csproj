@@ -85,6 +85,8 @@
     <Compile Include="Core\BasePage.cs" />
     <Compile Include="Core\BrowserTypes.cs" />
     <Compile Include="CustomElements\Attributes\BlockTitleAttribute.cs" />
+    <Compile Include="CustomElements\Attributes\TimeToSearchAttribute.cs" />
+    <Compile Include="CustomElements\Elements\ACheckBox.cs" />
     <Compile Include="CustomElements\Elements\ALink.cs" />
     <Compile Include="Decorators\BaseDecorator.cs" />
     <Compile Include="Decorators\ABlockDecorator.cs" />
@@ -106,8 +108,8 @@
     <Compile Include="CustomElements\Elements\AButton.cs" />
     <Compile Include="CustomElements\Elements\ATextInput.cs" />
     <Compile Include="CustomElements\Elements\ATextLabel.cs" />
-    <Compile Include="CustomElements\ABlockElement.cs" />
-    <Compile Include="CustomElements\AElement.cs" />
+    <Compile Include="CustomElements\ABlock.cs" />
+    <Compile Include="CustomElements\AProxyElement.cs" />
     <Compile Include="CustomElements\AList.cs" />
     <Compile Include="Core\PageManager.cs" />
     <Compile Include="Decorators\AFieldDecorator.cs" />

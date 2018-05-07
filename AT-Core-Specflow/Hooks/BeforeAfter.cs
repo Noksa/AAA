@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using Allure.Commons;
 using AT_Core_Specflow.Core;
+using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.Extensions;
 using AT_Core_Specflow.Helpers;
 using TechTalk.SpecFlow;
@@ -28,7 +30,7 @@ namespace AT_Core_Specflow.Hooks
         [BeforeScenario]
         public virtual void Setup()
         {
-            PageManager.AddAllPagesToList();
+            AddAllPagesToDictionary();
             var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
             if (!parsed)
                 throw new NullReferenceException(
@@ -64,6 +66,13 @@ namespace AT_Core_Specflow.Hooks
             });
             
             list.ForEach(_ => AllureSteps.AddSingleStep(_.name));
+        }
+
+        private void AddAllPagesToDictionary()
+        {
+            var pages = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes())
+                .Where(t => t.IsClass && t.BaseType == typeof(BasePage) && t.GetCustomAttribute(typeof(PageTitleAttribute), false) != null).ToList();
+            pages.ForEach(page => PageManager.AllPages.Add(page));
         }
     }
 }

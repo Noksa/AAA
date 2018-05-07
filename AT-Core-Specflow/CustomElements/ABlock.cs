@@ -11,9 +11,9 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements
 {
-    public abstract class ABlockElement : BasePage, IWebElement
+    public abstract class ABlock : BasePage, IWebElement
     {
-        protected ABlockElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
+        protected ABlock(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
         {
             Bys = bys;
             _locator = locator;
@@ -25,6 +25,7 @@ namespace AT_Core_Specflow.CustomElements
         protected readonly IEnumerable<By> Bys;
         protected bool CacheLookup;
         public string Title { get; }
+        public int TimeOut { get; set; }
         private readonly IElementLocator _locator;
         private IWebElement _realElement;
         
@@ -91,10 +92,10 @@ namespace AT_Core_Specflow.CustomElements
             WrappedElement.Submit();
         }
 
-        public IWaitUntil<ABlockElement> Wait(TimeSpan timespan = default(TimeSpan))
+        public IWaitUntil<ABlock> Wait(TimeSpan timespan = default(TimeSpan))
         {
             if (timespan == default(TimeSpan)) timespan = TimeSpan.FromSeconds(5);
-            return new BaseWaitTypeChooser<ABlockElement>(this, timespan);
+            return new BaseWaitTypeChooser<ABlock>(this, timespan);
         }
     }
 }

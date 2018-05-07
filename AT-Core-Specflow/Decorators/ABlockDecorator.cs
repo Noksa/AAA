@@ -24,6 +24,7 @@ namespace AT_Core_Specflow.Decorators
                     ((BlockTitleAttribute)member.DeclaringType.GetCustomAttribute(typeof(BlockTitleAttribute)))
                     .Title;
                 AddElementToBlock(blockName, element, elementTitle);
+                SetTimeOutSearch(member, targetType, element);
                 return element;
             }
             throw new NotImplementedException(

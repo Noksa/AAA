@@ -10,7 +10,7 @@ using OpenQA.Selenium.Support.PageObjects;
 
 namespace AT_Core_Specflow.CustomElements
 {
-    public class AElement : IWebElement
+    public class AProxyElement : IWebElement
     {
         protected readonly IEnumerable<By> Bys;
         protected bool CacheLookup;
@@ -18,6 +18,7 @@ namespace AT_Core_Specflow.CustomElements
         private readonly IElementLocator _locator;
         private IWebElement _realElement;
 
+        public int TimeOut { get; set; }
         private IWebElement WrappedElement
         {
             get
@@ -25,7 +26,9 @@ namespace AT_Core_Specflow.CustomElements
                 if (!CacheLookup || WrappedElement == null)
                     try
                     {
+                        if (TimeOut > 0 ) DriverFactory.GetDriver().Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(TimeOut);
                         _realElement = _locator.LocateElement(Bys);
+                        DriverFactory.GetDriver().Manage().Timeouts().ImplicitWait = TimeSpan.Zero;
                     }
                     catch (NoSuchElementException ex)
                     {
@@ -37,7 +40,7 @@ namespace AT_Core_Specflow.CustomElements
 
 
 
-        public AElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
+        public AProxyElement(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle)
         {
             Bys = bys;
             CacheLookup = cache;
@@ -98,10 +101,10 @@ namespace AT_Core_Specflow.CustomElements
             WrappedElement.Submit();
         }
 
-        public IWaitUntil<AElement> Wait(TimeSpan timespan = default(TimeSpan))
+        public IWaitUntil<AProxyElement> Wait(TimeSpan timespan = default(TimeSpan))
         {
             if (timespan == default(TimeSpan)) timespan = TimeSpan.FromSeconds(5);
-            return new BaseWaitTypeChooser<AElement>(this, timespan);
+            return new BaseWaitTypeChooser<AProxyElement>(this, timespan);
         }
     }
 }

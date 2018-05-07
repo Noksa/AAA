@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
+using AT_Core_Specflow.CustomElements.Elements;
 using AT_Core_Specflow.Decorators;
 using AT_Core_Specflow.Extensions;
 using AT_Core_Specflow.Extensions.WaitExtensions;
@@ -18,14 +19,14 @@ namespace AT_Core_Specflow.Core
     public abstract class BasePage
     {
         protected bool IsUsedBlock { get; }
-        private readonly ABlockElement _usedBlock;
+        private readonly ABlock _usedBlock;
 
         protected BasePage()
         {
-            if (GetType().BaseType == typeof(ABlockElement))
+            if (GetType().BaseType == typeof(ABlock))
             {
                 IsUsedBlock = true;
-                _usedBlock = (ABlockElement) this;
+                _usedBlock = (ABlock) this;
                 return;
             }
             PageManager.PageContext.Elements.Clear();
@@ -90,7 +91,7 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("заполняет поле")]
         public virtual void FillField(string elementTitle, string value)
         {
-            var element = (AElement) GetElementByTitle(elementTitle);
+            var element = (AProxyElement) GetElementByTitle(elementTitle);
             element.SendKeys(value);
             AllureSteps.AddSingleStep($"Поле '{elementTitle}' заполнено значением '{value}'");
         }
@@ -99,7 +100,7 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("кликает по ссылке")]
         public virtual void PressButton(string elementTitle)
         {
-            var element = (AElement) GetElementByTitle(elementTitle);
+            var element = (AProxyElement) GetElementByTitle(elementTitle);
             element.Click();
             AllureSteps.AddSingleStep($"Произведён клик по элементу '{elementTitle}'");
         }
@@ -110,6 +111,7 @@ namespace AT_Core_Specflow.Core
             var element = GetElementByTitle(elementTitle) as IWebElement;
             var result = element.Wait().Until(_ => _.Exists());
             Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
+            AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
         }
 
         public virtual void CheckElementExists(List<object> elementTitles)
@@ -130,6 +132,7 @@ namespace AT_Core_Specflow.Core
         public virtual void WriteValueToStash(string value, string variable)
         {
             CoreSteps.ScenarioContext.Add(variable, value);
+            AllureSteps.AddSingleStep($"Значение '{value}' записано в переменную '{variable}'");
         }
         [ActionTitle("запоминает значение элемента")]
         public virtual void WriteElementValueToStash(string elementTitle, string variable)
@@ -150,8 +153,8 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("отмечает чек-бокс")]
         public virtual void SetCheckBox(string elementTitle)
         {
-            var checkbox = GetElementByTitle(elementTitle) as IWebElement;
-            if (!checkbox.Selected) checkbox.Click();
+            var checkbox = GetElementByTitle(elementTitle) as ACheckBox;
+            checkbox.Select();
         }
 
         #endregion

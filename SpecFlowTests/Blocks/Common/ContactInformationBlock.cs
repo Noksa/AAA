@@ -9,7 +9,7 @@ namespace SpecFlowTests.Blocks.Common
 {
     [FindBy(ClassName = "block9")]
     [BlockTitle("Контактная информация")]
-    public class ContactInformationBlock : ABlockElement
+    public class ContactInformationBlock : ABlock
     {
         public ContactInformationBlock(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         { 

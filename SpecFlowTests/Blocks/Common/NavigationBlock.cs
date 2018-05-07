@@ -9,7 +9,7 @@ namespace SpecFlowTests.Blocks.Common
 {
     [BlockTitle("Навигация")]
     [FindBy(Css = "div[class=\'block1\']")]
-    public class NavigationBlock : ABlockElement
+    public class NavigationBlock : ABlock
     {
         public NavigationBlock(IElementLocator locator, IEnumerable<By> bys, bool cache, string elementTitle) : base(locator, bys, cache, elementTitle)
         {
