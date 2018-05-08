@@ -75,7 +75,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 5
        testRunner.When("открывается страница \"Главная\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Когда ");
 #line 6
-    testRunner.Then("пользователь (проверяет наличие текста на странице) \"тест\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
+    testRunner.Then("пользователь (проверяет наличие текста на странице) \"Услуги\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Название элемента"});

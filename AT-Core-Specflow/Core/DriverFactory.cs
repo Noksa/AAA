@@ -22,6 +22,7 @@ namespace AT_Core_Specflow.Core
             return Driver.Value;
         }
 
+        public static IWebElement BodyElement => GetDriver().FindElement(By.TagName("body"));
 
         public static void InitDriver(Browser browserType)
         {

@@ -18,6 +18,19 @@ namespace AT_Core_Specflow.Hooks
         }
 
         [StepArgumentTransformation]
+        public Dictionary<object, object> TableToDictionary(Table table)
+        {
+            TransformHelpFunc.CheckTableIsDictionary(table);
+            var dictionary = new Dictionary<object, object>();
+            foreach (var tableRow in table.Rows)
+            {
+                dictionary.Add(tableRow[0], tableRow[1]);
+            }
+
+            return dictionary;
+        }
+
+        [StepArgumentTransformation]
         public WrappedString WrapString(string str)
         {
             var writerAction = CoreSteps.ScenarioContext.StepContext.StepInfo.Text;
@@ -55,7 +68,13 @@ namespace AT_Core_Specflow.Hooks
                 if (table.Rows[0].Keys.Count > 1)
                     throw new NullReferenceException($"Table in action \"{CoreSteps.ScenarioContext.StepContext.StepInfo.Text}\" cant have more then 1 column.");
             }
+
+            public static void CheckTableIsDictionary(Table table)
+            {
+                if (table.Rows[0].Values.Count > 2) throw new NullReferenceException($"Table in action \"{CoreSteps.ScenarioContext.StepContext.StepInfo.Text}\" cant have more then 2 values at row.");
+            }
         }
+
 
 
 

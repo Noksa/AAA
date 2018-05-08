@@ -54,6 +54,12 @@ namespace AT_Core_Specflow.Hooks
             PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, list);
         }
 
+        [StepDefinition("^пользователь \\((.*)\\) данными из таблицы$")]
+        public void ExecuteMethodByTitle(string actionTitle, Dictionary<object, object> dict)
+        {
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, dict);
+        }
+
         #endregion
 
         #region Actions in blocks

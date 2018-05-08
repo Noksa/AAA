@@ -15,6 +15,8 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.PageObjects;
+using TechTalk.SpecFlow;
+
 #pragma warning disable 618
 
 namespace AT_Core_Specflow.Core
@@ -23,7 +25,7 @@ namespace AT_Core_Specflow.Core
     {
         protected bool IsUsedBlock { get; }
         private readonly ABlock _usedBlock;
-
+        public IWebElement BodyElement => DriverFactory.GetDriver().FindElement(By.TagName("body"));
         protected BasePage()
         {
             if (GetType().BaseType == typeof(ABlock))
@@ -102,6 +104,18 @@ namespace AT_Core_Specflow.Core
             AllureSteps.AddSingleStep($"Поле '{elementTitle}' заполнено значением '{value}'");
         }
 
+        [ActionTitle("заполняет поля")]
+        public virtual void FillField(Dictionary<object, object> dictionary)
+        {
+            foreach (var keyValuePair in dictionary)
+            {
+                var element = GetElementByTitle(keyValuePair.Key.ToString()) as IWebElement;
+                element.SendKeys(keyValuePair.Value.ToString());
+                AllureSteps.AddSingleStep($"Поле '{GetElementByTitle(keyValuePair.Key.ToString())}' заполнено значением '{keyValuePair.Value}'");
+            }
+        }
+
+
         [ActionTitle("нажимает клавишу")]
         public virtual void PressButton(string btn)
         {
@@ -124,6 +138,15 @@ namespace AT_Core_Specflow.Core
             var result = element.Wait().Until(_ => _.Exists());
             Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
             AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
+        }
+
+        [ActionTitle("проверяет отсутствие элемента")]
+        public virtual void CheckElementNotExists(string elementTitle)
+        {
+            var element = GetElementByTitle(elementTitle) as IWebElement;
+            var result = element.Wait().Until(_ => !_.Exists());
+            Assert.IsTrue(result, $"Element '{elementTitle}' exists.");
+            AllureSteps.AddSingleStep($"Проверено отсутствие элемента '{elementTitle}'");
         }
 
         [ActionTitle("проверяет наличие элемента с текстом")]
@@ -174,15 +197,15 @@ namespace AT_Core_Specflow.Core
         [ActionTitle("проверяет наличие текста на странице")]
         public virtual void CheckTextPresentsOnPage(string text)
         {
-            var body = DriverFactory.GetDriver().FindElement(By.TagName("body"));
-            Assert.True(body.Wait().Until(_ => _.Text.Contains(text)), $"Текст '{text}' не появился на странице '{PageManager.PageContext.PageTitle}'");
+            Assert.True(BodyElement.Wait().Until(_ => _.Text.ToLower().Contains(text.ToLower())), $"Текст '{text}' не появился на странице '{PageManager.PageContext.PageTitle}'");
+            AllureSteps.AddSingleStep($"Текст '{text}' присутствует на странице '{PageManager.PageContext.PageTitle}'");
         }
 
         [ActionTitle("проверяет отсутствие текста на странице")]
         public virtual void CheckTextNotPresentsOnPage(string text)
         {
-            var body = DriverFactory.GetDriver().FindElement(By.TagName("body"));
-            Assert.True(body.Wait().Until(_ => !_.Text.Contains(text)), $"Текст '{text}' присутствует на странице '{PageManager.PageContext.PageTitle}'");
+            Assert.True(BodyElement.Wait().Until(_ => !_.Text.ToLower().Contains(text.ToLower())), $"Текст '{text}' присутствует на странице '{PageManager.PageContext.PageTitle}'");
+            AllureSteps.AddSingleStep($"Текст '{text}' отсутствует на странице '{PageManager.PageContext.PageTitle}'");
         }
 
         [ActionTitle("отмечает чек-бокс")]

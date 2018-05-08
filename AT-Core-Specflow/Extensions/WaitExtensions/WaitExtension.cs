@@ -31,6 +31,7 @@ namespace AT_Core_Specflow.Extensions.WaitExtensions
                     var aBlock = obj as ABlock;
                     timespan = TimeSpan.FromSeconds(aBlock.TimeOut);
                 }
+                else timespan = TimeSpan.FromSeconds(4);
             }
             Timing = timespan;
             return new BaseWaitTypeChooser<T>(obj, timespan);
