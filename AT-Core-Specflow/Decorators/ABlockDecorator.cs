@@ -14,9 +14,9 @@ namespace AT_Core_Specflow.Decorators
             var cache = ShouldCacheLookup(member);
             var targetType = GetElementType(member);
             var elementTitle = GetElementTitle(member, targetType);
-
             IList<By> bys = CreateLocatorList(member, targetType);
             if (bys.Count <= 0) return null;
+
             if (CheckElementType(targetType))
             {
                 var element = Activator.CreateInstance(targetType, locator, bys, cache, elementTitle);

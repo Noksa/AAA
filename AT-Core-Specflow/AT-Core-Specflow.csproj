@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Allure.Fork.Commons, Version=0.1.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -92,9 +94,7 @@
     <Compile Include="Decorators\ABlockDecorator.cs" />
     <Compile Include="Extensions\ElementExtensions.cs" />
     <Compile Include="Extensions\WaitExtensions\BaseWaitTypeChooser.cs" />
-    <Compile Include="Extensions\WaitExtensions\Interfaces\IPageWaitConditions.cs" />
     <Compile Include="Extensions\WaitExtensions\Interfaces\IWaitUntil{T}.cs" />
-    <Compile Include="Extensions\WaitExtensions\PageWaitConditions.cs" />
     <Compile Include="Extensions\WaitExtensions\WaitExtension.cs" />
     <Compile Include="Helpers\AllureSteps.cs" />
     <Compile Include="Extensions\StringExtension.cs" />

@@ -30,6 +30,7 @@ namespace AT_Core_Specflow.Hooks
         [BeforeScenario]
         public virtual void Setup()
         {
+            AllureLifecycle.Instance.UpdateFixture(_ => _.name = "Инициализация драйвера.");
             AddAllPagesToDictionary();
             var parsed = Enum.TryParse(ConfigurationManager.AppSettings.Get("BrowserType").FirstCharToUpperAndOtherToLower(), out Browser);
             if (!parsed)
@@ -41,7 +42,6 @@ namespace AT_Core_Specflow.Hooks
                     "Не обнаружена стартовая страница в файле конфигурации App.config!\nДобавьте стартовую страницу в файл конфигурации. Key: StartUrl");
             DriverFactory.InitDriver(Browser);
             DriverFactory.GetDriver().Navigate().GoToUrl(Url);
-            AllureLifecycle.Instance.UpdateFixture(_ => _.name = "Инициализация драйвера.");
         }
 
         [AfterScenario]
@@ -67,7 +67,7 @@ namespace AT_Core_Specflow.Hooks
             
             list.ForEach(_ => AllureSteps.AddSingleStep(_.name));
         }
-
+        
         private void AddAllPagesToDictionary()
         {
             var pages = AppDomain.CurrentDomain.GetAssemblies().SelectMany(t => t.GetTypes())

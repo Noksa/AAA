@@ -23,5 +23,10 @@ namespace AT_Core_Specflow.Extensions
 
             return value;
         }
+
+        public static bool Exists(this IWebElement element)
+        {
+            return element.Displayed;
+        }
     }
 }

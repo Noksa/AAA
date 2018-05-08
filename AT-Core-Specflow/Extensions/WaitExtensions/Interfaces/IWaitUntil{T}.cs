@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq.Expressions;
 
 namespace AT_Core_Specflow.Extensions.WaitExtensions.Interfaces
 {
-    public interface IWaitUntil<T>
+    public interface IWaitUntil<out T>
     {
-        TResult Until<TResult>(Expression<Func<TResult>> func);
-        TResult Until<TResult>(Expression<Func<T, TResult>> func);
+        TResult Until<TResult>(Func<TResult> func);
+        TResult Until<TResult>(Func<T, TResult> func);
     }
 }

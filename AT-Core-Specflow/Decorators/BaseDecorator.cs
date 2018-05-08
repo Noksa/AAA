@@ -77,12 +77,12 @@ namespace AT_Core_Specflow.Decorators
             if (targetType.BaseType == typeof(ABlock) &&
                 targetType.GetCustomAttribute(typeof(BlockTitleAttribute), true) is BlockTitleAttribute blockAttr)
                 return blockAttr.Title;
-            return ((ElementTitleAttribute) member.GetCustomAttribute(typeof(ElementTitleAttribute), true)).Name;
+            return ((ElementTitleAttribute) member.GetCustomAttribute(typeof(ElementTitleAttribute), true)).Title;
         }
 
         protected void SetTimeOutSearch(MemberInfo member, Type targetType, object element)
         {
-            var timing = 0;
+            var timing = 4;
             if (targetType.BaseType == typeof(ABlock) &&
                 targetType.GetCustomAttribute(typeof(TimeToSearchAttribute), true) is TimeToSearchAttribute timeAttr)
                 timing = timeAttr.TimeOut;

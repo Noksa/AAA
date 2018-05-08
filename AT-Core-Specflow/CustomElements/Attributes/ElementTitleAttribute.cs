@@ -5,12 +5,12 @@ namespace AT_Core_Specflow.CustomElements.Attributes
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class)]
     public class ElementTitleAttribute : Attribute
     {
-        public ElementTitleAttribute(string name)
+        public ElementTitleAttribute(string title)
         {
-            Name = name;
+            Title = title;
         }
 
-        public string Name { get; set; }
+        public string Title { get; }
     }
 
 }

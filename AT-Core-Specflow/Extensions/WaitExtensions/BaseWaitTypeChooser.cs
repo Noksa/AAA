@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq.Expressions;
 using System.Threading;
 using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
 
@@ -17,23 +16,22 @@ namespace AT_Core_Specflow.Extensions.WaitExtensions
             Obj = obj;
         }
 
-        public TResult Until<TResult>(Expression<Func<TResult>> func)
+        public TResult Until<TResult>(Func<TResult> func)
         {
-            return Until(_ => func.Compile()());
+            return Until(_ => func.Invoke());
         }
 
-        public TResult Until<TResult>(Expression<Func<T, TResult>> func)
+        public TResult Until<TResult>(Func<T, TResult> func)
         {
             var resultType = typeof(TResult);
             var stopwatch = new Stopwatch();
-            var methodCall = func.Body as MethodCallExpression;
             stopwatch.Start();
-            var result = func.Compile()(Obj);
+            var result = default(TResult);
             while (stopwatch.Elapsed <= TimeSpan)
             {
                 try
                 {
-                    result = func.Compile()(Obj);
+                    result = func.Invoke(Obj);
                     if (resultType == typeof(bool))
                     {
                         var boolResult = result as bool?;
@@ -50,12 +48,7 @@ namespace AT_Core_Specflow.Extensions.WaitExtensions
                     Thread.Sleep(500);
                 }
             }
-
             return result;
-            //throw new WebDriverTimeoutException($"Timed out after {TimeSpan.TotalSeconds} seconds." +
-            //                                    $"\n\nCaused in class: {methodCall.Method.DeclaringType.Name}" +
-            //                                    $"\nMethodName: {methodCall.Method.Name}" +
-            //                                    $"\nParameters: {string.Join(", ", methodCall.Arguments)}");
         }
     }
 }

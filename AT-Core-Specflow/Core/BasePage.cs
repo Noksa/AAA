@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Allure.Commons;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.CustomElements.Attributes;
 using AT_Core_Specflow.CustomElements.Elements;
@@ -13,6 +14,7 @@ using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
+#pragma warning disable 618
 
 namespace AT_Core_Specflow.Core
 {
@@ -122,8 +124,9 @@ namespace AT_Core_Specflow.Core
                 {
                     var element = GetElementByTitle(elementTitle.ToString()) as IWebElement;
                     var result =  element.Wait().Until(_ => _.Exists());
+                    if (result) AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
+                    else AllureSteps.AddSingleStep($"Элемент '{elementTitle}' отсутствует.", Status.failed);
                     Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
-                    AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
                 }
             });
         }

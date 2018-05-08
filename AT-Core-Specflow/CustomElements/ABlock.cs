@@ -5,9 +5,9 @@ using System.Drawing;
 using AT_Core_Specflow.Core;
 using AT_Core_Specflow.Decorators;
 using AT_Core_Specflow.Extensions.WaitExtensions;
-using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
+#pragma warning disable 618
 
 namespace AT_Core_Specflow.CustomElements
 {
@@ -34,7 +34,16 @@ namespace AT_Core_Specflow.CustomElements
         {
             get
             {
-                if (!CacheLookup || WrappedElement == null) _realElement = _locator.LocateElement(Bys);
+                if (!CacheLookup || WrappedElement == null)
+                    try
+                    {
+                        if (TimeOut > 0) this.Wait(TimeSpan.FromSeconds(TimeOut)).Until(() => _locator.LocateElement(Bys));
+                        _realElement = _locator.LocateElement(Bys);
+                    }
+                    catch (NoSuchElementException ex)
+                    {
+                        throw new NoSuchElementException(ex.Message + $"\nНазвание элемента: \"{Title}\"\nБлок элемента: \"{Title}\"\nСтраница элемента: \"{PageManager.PageContext.PageTitle}\"");
+                    }
                 return _realElement;
             }
         }
@@ -90,12 +99,6 @@ namespace AT_Core_Specflow.CustomElements
         public void Submit()
         {
             WrappedElement.Submit();
-        }
-
-        public IWaitUntil<ABlock> Wait(TimeSpan timespan = default(TimeSpan))
-        {
-            if (timespan == default(TimeSpan)) timespan = TimeSpan.FromSeconds(5);
-            return new BaseWaitTypeChooser<ABlock>(this, timespan);
         }
     }
 }

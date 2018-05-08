@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using AT_Core_Specflow.Core;
 using AT_Core_Specflow.Extensions.WaitExtensions;
-using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 
@@ -26,9 +25,8 @@ namespace AT_Core_Specflow.CustomElements
                 if (!CacheLookup || WrappedElement == null)
                     try
                     {
-                        if (TimeOut > 0 ) DriverFactory.GetDriver().Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(TimeOut);
+                        if (TimeOut > 0 ) this.Wait(TimeSpan.FromSeconds(TimeOut)).Until(() => _locator.LocateElement(Bys));
                         _realElement = _locator.LocateElement(Bys);
-                        DriverFactory.GetDriver().Manage().Timeouts().ImplicitWait = TimeSpan.Zero;
                     }
                     catch (NoSuchElementException ex)
                     {
@@ -99,12 +97,6 @@ namespace AT_Core_Specflow.CustomElements
         public void Submit()
         {
             WrappedElement.Submit();
-        }
-
-        public IWaitUntil<AProxyElement> Wait(TimeSpan timespan = default(TimeSpan))
-        {
-            if (timespan == default(TimeSpan)) timespan = TimeSpan.FromSeconds(5);
-            return new BaseWaitTypeChooser<AProxyElement>(this, timespan);
         }
     }
 }

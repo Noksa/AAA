@@ -1,44 +1,41 @@
 ﻿using System;
+using System.Configuration;
 using System.Threading;
 using AT_Core_Specflow.CustomElements;
 using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
 
 namespace AT_Core_Specflow.Extensions.WaitExtensions
 
 {
     public static class WaitExtension
     {
-        internal static ThreadLocal<TimeSpan> Timespan = new ThreadLocal<TimeSpan>();
+        private static readonly ThreadLocal<TimeSpan> Timespan = new ThreadLocal<TimeSpan>();
 
-        public static IWaitUntil<IWebElement> Wait(this IWebElement element, TimeSpan timespan = default(TimeSpan))
+        public static TimeSpan Timing
         {
-            Timespan.Value = timespan;
-            return new BaseWaitTypeChooser<IWebElement>(element, timespan);
+            get => Timespan.Value;
+            set => Timespan.Value = value;
         }
 
-        public static IWaitUntil<IWebDriver> Wait(this IWebDriver driver, TimeSpan timespan = default(TimeSpan))
+        public static IWaitUntil<T> Wait<T>(this T obj, TimeSpan timespan = default(TimeSpan))
         {
-            Timespan.Value = timespan;
-            return new BaseWaitTypeChooser<IWebDriver>(driver, timespan);
-        }
-    }
-
-    public static class ElementWaitExtension
-    {
-        public static bool Exists(this IWebElement element)
-        {
-            return element.Displayed;
-        }
-    }
-
-
-    public static class DriverWaitExtension
-    {
-        public static IPageWaitConditions Page(this IWebDriver driver)
-        {
-            return new PageWaitConditions(driver, WaitExtension.Timespan.Value);
+            if (timespan == default(TimeSpan))
+            {
+               if (obj is IWebDriver) timespan = TimeSpan.FromSeconds(10);
+               else if (obj.GetType().BaseType == typeof(AProxyElement))
+               {
+                   var aProxyElement = obj as AProxyElement;
+                   timespan = TimeSpan.FromSeconds(aProxyElement.TimeOut);
+               }
+               else if (obj.GetType().BaseType == typeof(ABlock))
+                {
+                    var aBlock = obj as ABlock;
+                    timespan = TimeSpan.FromSeconds(aBlock.TimeOut);
+                }
+            }
+            Timing = timespan;
+            return new BaseWaitTypeChooser<T>(obj, timespan);
         }
     }
 }
