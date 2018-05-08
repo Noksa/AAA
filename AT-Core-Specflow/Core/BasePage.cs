@@ -15,7 +15,6 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.PageObjects;
-using TechTalk.SpecFlow;
 
 #pragma warning disable 618
 
@@ -23,9 +22,20 @@ namespace AT_Core_Specflow.Core
 {
     public abstract class BasePage
     {
+        #region Fields
+
         protected bool IsUsedBlock { get; }
         private readonly ABlock _usedBlock;
+
+        #endregion
+
+        #region Properties
+
         public IWebElement BodyElement => DriverFactory.GetDriver().FindElement(By.TagName("body"));
+
+        #endregion
+
+        #region Ctor
         protected BasePage()
         {
             if (GetType().BaseType == typeof(ABlock))
@@ -38,6 +48,7 @@ namespace AT_Core_Specflow.Core
             PageManager.PageContext.ElementsInBlocks.Clear();
             PageFactory.InitElements(DriverFactory.GetDriver(), this, new AFieldDecorator());
         }
+        #endregion
 
         #region Core Methods
         public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
@@ -45,7 +56,7 @@ namespace AT_Core_Specflow.Core
             var method = HelpFunc.FindMethod(this, actionTitle, parameters);
             if (method == null)
                 throw new NullReferenceException(
-                    $"Cant find method for action '{actionTitle}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
+                    $"Не найден метод для выполнения действия '{actionTitle}' на странице '{PageManager.PageContext.PageTitle}'.\nПараметры метода: '{string.Join(", ", parameters)}'.");
             try
             {
                 method.Invoke(this, parameters);
@@ -63,7 +74,7 @@ namespace AT_Core_Specflow.Core
             var method = HelpFunc.FindMethod(block, actionTitle, parameters);
             if (method == null)
                 throw new NullReferenceException(
-                    $"Cant find method for action '{actionTitle}' in block '{_usedBlock.Title}' at page '{PageManager.PageContext.PageTitle}' with parameters: '{parameters}'.");
+                    $"Не найден метод для выполнения действия '{actionTitle}' в блоке '{_usedBlock.Title}' на странице '{PageManager.PageContext.PageTitle}'.\nПараметры метода: '{string.Join(", ", parameters)}'.");
             try
             {
                 method.Invoke(block, parameters);
@@ -81,14 +92,14 @@ namespace AT_Core_Specflow.Core
                 var element = PageManager.PageContext.Elements.FirstOrDefault(ele => ele.Value == elementTitle).Key;
                 if (element != null) return element;
                 throw new NullReferenceException(
-                    $"Cant find element with title '{elementTitle}' at page '{PageManager.PageContext.PageTitle}'");
+                    $"Не найден элемент с названием '{elementTitle}' на странице '{PageManager.PageContext.PageTitle}'.");
             }
             var blockName = _usedBlock.Title;
             var elementInBlock = PageManager.PageContext.ElementsInBlocks.FirstOrDefault(b => b.Key == blockName).Value
                 .FirstOrDefault(ele => ele.Value == elementTitle).Key;
             if (elementInBlock != null) return elementInBlock;
             throw new NullReferenceException(
-                $"Cant find element with name '{elementTitle}' in block '{blockName}' at page '{PageManager.PageContext.PageTitle}'");
+                $"Не найден элемент с названием '{elementTitle}' в блоке '{blockName}' на странице '{PageManager.PageContext.PageTitle}'.");
 
         }
         #endregion
@@ -101,17 +112,16 @@ namespace AT_Core_Specflow.Core
             var element = (AProxyElement) GetElementByTitle(elementTitle);
             element.Clear();
             element.SendKeys(value);
-            AllureSteps.AddSingleStep($"Поле '{elementTitle}' заполнено значением '{value}'");
+            AllureSteps.AddSingleStep($"Поле '{elementTitle}' заполнено значением '{value}'.");
         }
-
-        [ActionTitle("заполняет поля")]
-        public virtual void FillField(Dictionary<object, object> dictionary)
+        
+        public virtual void FillField(Dictionary<string, string> dictionary)
         {
             foreach (var keyValuePair in dictionary)
             {
-                var element = GetElementByTitle(keyValuePair.Key.ToString()) as IWebElement;
-                element.SendKeys(keyValuePair.Value.ToString());
-                AllureSteps.AddSingleStep($"Поле '{GetElementByTitle(keyValuePair.Key.ToString())}' заполнено значением '{keyValuePair.Value}'");
+                var element = GetElementByTitle(keyValuePair.Key) as IWebElement;
+                element.SendKeys(keyValuePair.Value);
+                AllureSteps.AddSingleStep($"Поле '{GetElementByTitle(keyValuePair.Key)}' заполнено значением '{keyValuePair.Value}'.");
             }
         }
 
@@ -128,7 +138,7 @@ namespace AT_Core_Specflow.Core
         {
             var element = (AProxyElement) GetElementByTitle(elementTitle);
             element.Click();
-            AllureSteps.AddSingleStep($"Произведён клик по элементу '{elementTitle}'");
+            AllureSteps.AddSingleStep($"Произведён клик по элементу '{elementTitle}'.");
         }
 
         [ActionTitle("проверяет наличие элемента")]
@@ -137,7 +147,7 @@ namespace AT_Core_Specflow.Core
             var element = GetElementByTitle(elementTitle) as IWebElement;
             var result = element.Wait().Until(_ => _.Exists());
             Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
-            AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
+            AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'.");
         }
 
         [ActionTitle("проверяет отсутствие элемента")]
@@ -146,7 +156,7 @@ namespace AT_Core_Specflow.Core
             var element = GetElementByTitle(elementTitle) as IWebElement;
             var result = element.Wait().Until(_ => !_.Exists());
             Assert.IsTrue(result, $"Element '{elementTitle}' exists.");
-            AllureSteps.AddSingleStep($"Проверено отсутствие элемента '{elementTitle}'");
+            AllureSteps.AddSingleStep($"Проверено отсутствие элемента '{elementTitle}'.");
         }
 
         [ActionTitle("проверяет наличие элемента с текстом")]
@@ -165,9 +175,9 @@ namespace AT_Core_Specflow.Core
                 {
                     var element = GetElementByTitle(elementTitle.ToString()) as IWebElement;
                     var result =  element.Wait().Until(_ => _.Exists());
-                    if (result) AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
+                    if (result) AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'.");
                     else AllureSteps.AddSingleStep($"Элемент '{elementTitle}' отсутствует.", Status.failed);
-                    Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
+                    Assert.IsTrue(result, $"Элемент '{elementTitle}' отсутствует.");
                 }
             });
         }
@@ -176,7 +186,7 @@ namespace AT_Core_Specflow.Core
         public virtual void WriteValueToStash(string value, string variable)
         {
             CoreSteps.ScenarioContext.Add(variable, value);
-            AllureSteps.AddSingleStep($"Значение '{value}' записано в переменную '{variable}'");
+            AllureSteps.AddSingleStep($"Значение '{value}' записано в переменную '{variable}'.");
         }
         [ActionTitle("запоминает значение элемента")]
         public virtual void WriteElementValueToStash(string elementTitle, string variable)
@@ -184,6 +194,7 @@ namespace AT_Core_Specflow.Core
             var element = GetElementByTitle(elementTitle) as IWebElement;
             var value = element.GetValue();
             CoreSteps.ScenarioContext.Add(variable, value);
+            AllureSteps.AddSingleStep($"Значение элемента '{elementTitle}' записано в переменную '{variable}'.");
         }
 
         [ActionTitle("проверяет значение элемента")]
@@ -191,21 +202,21 @@ namespace AT_Core_Specflow.Core
         {
             var element = GetElementByTitle(elementTitle) as IWebElement;
             Assert.AreEqual(expectedValue, element.GetValue(), $"Значение элемента '{elementTitle}' не совпадает с ожидаемым.");
-            AllureSteps.AddSingleStep($"Проверено значение элемента '{elementTitle}' со значением '{expectedValue}'");
+            AllureSteps.AddSingleStep($"Проверено значение элемента '{elementTitle}' со значением '{expectedValue}'.");
         }
 
         [ActionTitle("проверяет наличие текста на странице")]
         public virtual void CheckTextPresentsOnPage(string text)
         {
-            Assert.True(BodyElement.Wait().Until(_ => _.Text.ToLower().Contains(text.ToLower())), $"Текст '{text}' не появился на странице '{PageManager.PageContext.PageTitle}'");
-            AllureSteps.AddSingleStep($"Текст '{text}' присутствует на странице '{PageManager.PageContext.PageTitle}'");
+            Assert.True(BodyElement.Wait().Until(_ => _.Text.ToLower().Contains(text.ToLower())), $"Текст '{text}' не появился на странице '{PageManager.PageContext.PageTitle}'.");
+            AllureSteps.AddSingleStep($"Текст '{text}' присутствует на странице '{PageManager.PageContext.PageTitle}'.");
         }
 
         [ActionTitle("проверяет отсутствие текста на странице")]
         public virtual void CheckTextNotPresentsOnPage(string text)
         {
-            Assert.True(BodyElement.Wait().Until(_ => !_.Text.ToLower().Contains(text.ToLower())), $"Текст '{text}' присутствует на странице '{PageManager.PageContext.PageTitle}'");
-            AllureSteps.AddSingleStep($"Текст '{text}' отсутствует на странице '{PageManager.PageContext.PageTitle}'");
+            Assert.True(BodyElement.Wait().Until(_ => !_.Text.ToLower().Contains(text.ToLower())), $"Текст '{text}' присутствует на странице '{PageManager.PageContext.PageTitle}'.");
+            AllureSteps.AddSingleStep($"Текст '{text}' отсутствует на странице '{PageManager.PageContext.PageTitle}'.");
         }
 
         [ActionTitle("отмечает чек-бокс")]
@@ -213,6 +224,7 @@ namespace AT_Core_Specflow.Core
         {
             var checkbox = GetElementByTitle(elementTitle) as ACheckBox;
             checkbox.Select();
+            AllureSteps.AddSingleStep($"Чек-бокс '{elementTitle}' отмечен.");
         }
 
         [ActionTitle("снимает чек-бокс")]
@@ -220,6 +232,7 @@ namespace AT_Core_Specflow.Core
         {
             var checkbox = GetElementByTitle(elementTitle) as ACheckBox;
             checkbox.Select(false);
+            AllureSteps.AddSingleStep($"Чек-бокс '{elementTitle}' снят.");
         }
 
         #endregion

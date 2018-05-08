@@ -8,7 +8,7 @@ namespace AT_Core_Specflow.Hooks
     [Binding]
     public class Transforms
     {
-        [StepArgumentTransformation(".*из списка$")]
+        [StepArgumentTransformation(".* из списка$")]
         public List<object> TableToObjectList(Table table)
         {
             var list = new List<object>();
@@ -17,16 +17,11 @@ namespace AT_Core_Specflow.Hooks
             return list;
         }
 
-        [StepArgumentTransformation]
-        public Dictionary<object, object> TableToDictionary(Table table)
+        [StepArgumentTransformation(".* из таблицы$")]
+        public Dictionary<string, string> TableToDictionary(Table table)
         {
             TransformHelpFunc.CheckTableIsDictionary(table);
-            var dictionary = new Dictionary<object, object>();
-            foreach (var tableRow in table.Rows)
-            {
-                dictionary.Add(tableRow[0], tableRow[1]);
-            }
-
+            var dictionary = table.Rows.ToDictionary(row => ReplaceParamWithVariable(row[0]).ToString(), row => ReplaceParamWithVariable(row[1]).ToString());
             return dictionary;
         }
 
@@ -46,6 +41,7 @@ namespace AT_Core_Specflow.Hooks
         {
             object value;
             var paramStr = param.ToString();
+            if (paramStr == "$Пробел") return " ";
             if (!paramStr.StartsWith("~")) return param;
             try
             {
@@ -54,7 +50,7 @@ namespace AT_Core_Specflow.Hooks
             catch (KeyNotFoundException)
             {
                 throw new KeyNotFoundException(
-                    $"Detected using variable with name '{param}' before it was written to stah.\nWrite variable to stash firstly.");
+                    $"Обнаружено использование переменной '{param}' прежде чем её значение было записано в хранилище.\nПеред использованием переменной необходимо записать её в хранилище.");
             }
             return value;
         }
@@ -66,12 +62,12 @@ namespace AT_Core_Specflow.Hooks
             public static void CheckTableIsList(Table table)
             {
                 if (table.Rows[0].Keys.Count > 1)
-                    throw new NullReferenceException($"Table in action \"{CoreSteps.ScenarioContext.StepContext.StepInfo.Text}\" cant have more then 1 column.");
+                    throw new NullReferenceException($"Таблица в действии \"{CoreSteps.ScenarioContext.StepContext.StepInfo.Text}\" не может иметь больше 1 столбца.");
             }
 
             public static void CheckTableIsDictionary(Table table)
             {
-                if (table.Rows[0].Values.Count > 2) throw new NullReferenceException($"Table in action \"{CoreSteps.ScenarioContext.StepContext.StepInfo.Text}\" cant have more then 2 values at row.");
+                if (table.Rows[0].Values.Count != 2) throw new NullReferenceException($"Таблица в действии \"{CoreSteps.ScenarioContext.StepContext.StepInfo.Text}\" должна иметь 2 столбца.");
             }
         }
 

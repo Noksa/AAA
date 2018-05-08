@@ -28,7 +28,7 @@ namespace AT_Core_Specflow.Core
                 CurrentPage = newPage;
                 return CurrentPage;
             }
-            throw new NullReferenceException($"Cant initialize page with title '{title}'.");
+            throw new NullReferenceException($"Не найдена страница с названием '{title}'. Убедитесь в наличии атрибута [PageTitle] у классов страниц.");
         }
 
     }

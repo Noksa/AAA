@@ -68,6 +68,7 @@ namespace SpecFlowTests.Features.Authorization
         [NUnit.Framework.CategoryAttribute("BadLogins")]
         [NUnit.Framework.TestCaseAttribute("РусскийЛогин", "РусскийПароль", null)]
         [NUnit.Framework.TestCaseAttribute("EnglishLogin", "EnglishPassword", null)]
+        [NUnit.Framework.TestCaseAttribute("$Пробел", "$Пробел", null)]
         public virtual void НегативнаяПроверкаВхода(string login, string password, string[] exampleTags)
         {
             string[] @__tags = new string[] {
@@ -87,13 +88,21 @@ this.ScenarioSetup(scenarioInfo);
        testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
 #line 8
        testRunner.Then("открывается страница \"Авторизация\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Поле",
+                        "Значение"});
+            table1.AddRow(new string[] {
+                        "Логин",
+                        string.Format("{0}", login)});
+            table1.AddRow(new string[] {
+                        "Пароль",
+                        string.Format("{0}", password)});
 #line 9
-       testRunner.And(string.Format("пользователь (заполняет поле) \"Логин\" значением \"{0}\"", login), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 10
-       testRunner.And(string.Format("пользователь (заполняет поле) \"Пароль\" значением \"{0}\"", password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 11
+       testRunner.And("пользователь (заполняет поле) из таблицы", ((string)(null)), table1, "И ");
+#line 13
        testRunner.And("пользователь (нажимает кнопку) \"Войти\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "И ");
-#line 12
+#line 14
        testRunner.Then("пользователь (проверяет значение элемента) \"Текст ошибки\" со значением \"~Текст ош" +
                     "ибки\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
 #line hidden

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using AT_Core_Specflow.Core;
+using AT_Core_Specflow.Extensions;
 using TechTalk.SpecFlow;
 
 namespace AT_Core_Specflow.Hooks
@@ -8,13 +9,27 @@ namespace AT_Core_Specflow.Hooks
     [Binding]
     public class CoreSteps
     {
+        #region Fields
+
         private static readonly ThreadLocal<ScenarioContext> ScenarioContextThreadLocal = new ThreadLocal<ScenarioContext>();
+
+        #endregion
+
+        #region Properties
+
         public static ScenarioContext ScenarioContext => ScenarioContextThreadLocal.Value;
+
+        #endregion
+
+        #region Ctor
 
         public CoreSteps(ScenarioContext scenarioContext)
         {
             ScenarioContextThreadLocal.Value = scenarioContext;
+            CommonExtension.AddCommonVariablesToContext();
         }
+
+        #endregion
 
         #region Actions in pages
 
@@ -54,8 +69,8 @@ namespace AT_Core_Specflow.Hooks
             PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, list);
         }
 
-        [StepDefinition("^пользователь \\((.*)\\) данными из таблицы$")]
-        public void ExecuteMethodByTitle(string actionTitle, Dictionary<object, object> dict)
+        [StepDefinition("^пользователь \\((.*)\\) из таблицы$")]
+        public void ExecuteMethodByTitle(string actionTitle, Dictionary<string, string> dict)
         {
             PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, dict);
         }

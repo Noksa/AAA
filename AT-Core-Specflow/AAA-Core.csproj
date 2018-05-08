@@ -92,6 +92,7 @@
     <Compile Include="CustomElements\Elements\ALink.cs" />
     <Compile Include="Decorators\BaseDecorator.cs" />
     <Compile Include="Decorators\ABlockDecorator.cs" />
+    <Compile Include="Extensions\CommonExtension.cs" />
     <Compile Include="Extensions\ElementExtensions.cs" />
     <Compile Include="Extensions\WaitExtensions\BaseWaitTypeChooser.cs" />
     <Compile Include="Extensions\WaitExtensions\IWaitUntil{T}.cs" />

@@ -105,7 +105,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AT-Core-Specflow\AT-Core-Specflow.csproj">
+    <ProjectReference Include="..\AT-Core-Specflow\AAA-Core.csproj">
       <Project>{a300788a-c8f0-4b79-aef0-03d60314cac8}</Project>
       <Name>AT-Core-Specflow</Name>
     </ProjectReference>
