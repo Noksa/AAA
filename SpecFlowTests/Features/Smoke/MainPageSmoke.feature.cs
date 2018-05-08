@@ -74,6 +74,8 @@ namespace SpecFlowTests.Features.Smoke
 this.ScenarioSetup(scenarioInfo);
 #line 5
        testRunner.When("открывается страница \"Главная\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Когда ");
+#line 6
+    testRunner.Then("пользователь (проверяет наличие текста на странице) \"тест\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Тогда ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Название элемента"});
@@ -83,7 +85,7 @@ this.ScenarioSetup(scenarioInfo);
                         "Контактная информация"});
             table1.AddRow(new string[] {
                         "Навигация"});
-#line 6
+#line 7
     testRunner.Then("пользователь (проверяет наличие элемента) из списка", ((string)(null)), table1, "Тогда ");
 #line hidden
             this.ScenarioCleanup();

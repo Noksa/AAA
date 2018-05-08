@@ -30,7 +30,8 @@ namespace AT_Core_Specflow.CustomElements
                     }
                     catch (NoSuchElementException ex)
                     {
-                        throw new NoSuchElementException(ex.Message + $"\nНазвание элемента: \"{Title}\"\nСтраница элемента: \"{PageManager.PageContext.PageTitle}\"");
+                        var msg = GetType().BaseType.BaseType == typeof(ABlock) ? $"\nНазвание элемента: \"{Title}\"\nБлок элемента: \"{GetType().DeclaringType.FullName}\"\nСтраница элемента: \"{PageManager.PageContext.PageTitle}\"" : $"\nНазвание элемента: \"{Title}\"\nСтраница элемента: \"{PageManager.PageContext.PageTitle}\"";
+                        throw new NoSuchElementException(ex.Message + msg);
                     }
                 return _realElement;
             }

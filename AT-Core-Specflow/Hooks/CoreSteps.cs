@@ -36,10 +36,16 @@ namespace AT_Core_Specflow.Hooks
             PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1);
         }
 
-        [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\" (?:значением |со значением | |)\"([^\"]*)\"$")]
+        [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\" (?:значением |со значением |с параметром | |)\"([^\"]*)\"$")]
         public void ExecuteMethodByTitle(string actionTitle, Transforms.WrappedString param1, Transforms.WrappedString param2)
         {
             PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1.Value, param2.Value);
+        }
+
+        [StepDefinition("^пользователь \\((.*)\\) \"([^\"]*)\" (?:значениями |со значениями |с параметрами | |)\"([^\"]*)\" \"([^\"]*)\"$")]
+        public void ExecuteMethodByTitle(string actionTitle, Transforms.WrappedString param1, Transforms.WrappedString param2, Transforms.WrappedString param3)
+        {
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitle(actionTitle, param1.Value, param2.Value, param3.Value);
         }
 
         [StepDefinition("^пользователь \\((.*)\\) из списка$")]
@@ -56,6 +62,18 @@ namespace AT_Core_Specflow.Hooks
         public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, string elementTitle)
         {
             PageManager.PageContext.CurrentPage.ExecuteMethodByTitleInBlock(blockName, actionTitle, elementTitle);
+        }
+
+        [StepDefinition("^пользователь в блоке \"([^\"]*)\" \\((.*)\\) \"([^\"]*)\" (?:значением |со значением |с параметром | |)\"([^\"]*)\"$")]
+        public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, string elementTitle, Transforms.WrappedString param1)
+        {
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitleInBlock(blockName, actionTitle, elementTitle, param1.Value);
+        }
+
+        [StepDefinition("^пользователь в блоке \"([^\"]*)\" \\((.*)\\) \"([^\"]*)\" (?:с значениями |со значениями |с параметрами | |)\"([^\"]*)\" \"([^\"]*)\"$")]
+        public void ExecuteMethodByTitleInBlock(string blockName, string actionTitle, string elementTitle, Transforms.WrappedString param1, Transforms.WrappedString param2)
+        {
+            PageManager.PageContext.CurrentPage.ExecuteMethodByTitleInBlock(blockName, actionTitle, elementTitle, param1.Value, param2.Value);
         }
 
         [StepDefinition("^пользователь в блоке \"([^\"]*)\" \\((.*)\\)$")]

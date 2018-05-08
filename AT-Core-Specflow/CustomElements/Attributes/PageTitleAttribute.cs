@@ -9,6 +9,6 @@ namespace AT_Core_Specflow.CustomElements.Attributes
         {
             Title = title;
         }
-        public string Title { get; set; }
+        public string Title { get; }
     }
 }

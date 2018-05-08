@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using System.Threading;
 using AT_Core_Specflow.CustomElements;
-using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
 using OpenQA.Selenium;
 
 namespace AT_Core_Specflow.Extensions.WaitExtensions

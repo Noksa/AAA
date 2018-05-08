@@ -94,7 +94,7 @@
     <Compile Include="Decorators\ABlockDecorator.cs" />
     <Compile Include="Extensions\ElementExtensions.cs" />
     <Compile Include="Extensions\WaitExtensions\BaseWaitTypeChooser.cs" />
-    <Compile Include="Extensions\WaitExtensions\Interfaces\IWaitUntil{T}.cs" />
+    <Compile Include="Extensions\WaitExtensions\IWaitUntil{T}.cs" />
     <Compile Include="Extensions\WaitExtensions\WaitExtension.cs" />
     <Compile Include="Helpers\AllureSteps.cs" />
     <Compile Include="Extensions\StringExtension.cs" />

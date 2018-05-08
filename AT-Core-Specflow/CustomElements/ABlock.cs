@@ -42,7 +42,7 @@ namespace AT_Core_Specflow.CustomElements
                     }
                     catch (NoSuchElementException ex)
                     {
-                        throw new NoSuchElementException(ex.Message + $"\nНазвание элемента: \"{Title}\"\nБлок элемента: \"{Title}\"\nСтраница элемента: \"{PageManager.PageContext.PageTitle}\"");
+                        throw new NoSuchElementException(ex.Message + $"\nНазвание блока: \"{Title}\"\nСтраница блока: \"{PageManager.PageContext.PageTitle}\"");
                     }
                 return _realElement;
             }

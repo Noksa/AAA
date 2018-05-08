@@ -13,6 +13,7 @@ using AT_Core_Specflow.Helpers;
 using AT_Core_Specflow.Hooks;
 using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.PageObjects;
 #pragma warning disable 618
 
@@ -36,6 +37,7 @@ namespace AT_Core_Specflow.Core
             PageFactory.InitElements(DriverFactory.GetDriver(), this, new AFieldDecorator());
         }
 
+        #region Core Methods
         public void ExecuteMethodByTitle(string actionTitle, params object[] parameters)
         {
             var method = HelpFunc.FindMethod(this, actionTitle, parameters);
@@ -87,20 +89,28 @@ namespace AT_Core_Specflow.Core
                 $"Cant find element with name '{elementTitle}' in block '{blockName}' at page '{PageManager.PageContext.PageTitle}'");
 
         }
-        
+        #endregion
+
         #region Actions
 
         [ActionTitle("заполняет поле")]
         public virtual void FillField(string elementTitle, string value)
         {
             var element = (AProxyElement) GetElementByTitle(elementTitle);
+            element.Clear();
             element.SendKeys(value);
             AllureSteps.AddSingleStep($"Поле '{elementTitle}' заполнено значением '{value}'");
         }
 
+        [ActionTitle("нажимает клавишу")]
+        public virtual void PressButton(string btn)
+        {
+            HelpFunc.Actions().SendKeys(btn);
+        }
+
         [ActionTitle("нажимает кнопку")]
         [ActionTitle("кликает по ссылке")]
-        public virtual void PressButton(string elementTitle)
+        public virtual void ClickButton(string elementTitle)
         {
             var element = (AProxyElement) GetElementByTitle(elementTitle);
             element.Click();
@@ -114,6 +124,14 @@ namespace AT_Core_Specflow.Core
             var result = element.Wait().Until(_ => _.Exists());
             Assert.IsTrue(result, $"Element '{elementTitle}' not exists.");
             AllureSteps.AddSingleStep($"Проверено наличие элемента '{elementTitle}'");
+        }
+
+        [ActionTitle("проверяет наличие элемента с текстом")]
+        public virtual void CheckElementsExistsWithText(string elementTitle, string text)
+        {
+            var element = GetElementByTitle(elementTitle) as IWebElement;
+            var elementText = element.GetValue();
+            Assert.AreEqual(text, elementText, $"Текст элемента '{elementTitle}' не соответствует ожидаемому.");
         }
 
         public virtual void CheckElementExists(List<object> elementTitles)
@@ -153,11 +171,32 @@ namespace AT_Core_Specflow.Core
             AllureSteps.AddSingleStep($"Проверено значение элемента '{elementTitle}' со значением '{expectedValue}'");
         }
 
+        [ActionTitle("проверяет наличие текста на странице")]
+        public virtual void CheckTextPresentsOnPage(string text)
+        {
+            var body = DriverFactory.GetDriver().FindElement(By.TagName("body"));
+            Assert.True(body.Wait().Until(_ => _.Text.Contains(text)), $"Текст '{text}' не появился на странице '{PageManager.PageContext.PageTitle}'");
+        }
+
+        [ActionTitle("проверяет отсутствие текста на странице")]
+        public virtual void CheckTextNotPresentsOnPage(string text)
+        {
+            var body = DriverFactory.GetDriver().FindElement(By.TagName("body"));
+            Assert.True(body.Wait().Until(_ => !_.Text.Contains(text)), $"Текст '{text}' присутствует на странице '{PageManager.PageContext.PageTitle}'");
+        }
+
         [ActionTitle("отмечает чек-бокс")]
         public virtual void SetCheckBox(string elementTitle)
         {
             var checkbox = GetElementByTitle(elementTitle) as ACheckBox;
             checkbox.Select();
+        }
+
+        [ActionTitle("снимает чек-бокс")]
+        public virtual void UnsetCheckBox(string elementTitle)
+        {
+            var checkbox = GetElementByTitle(elementTitle) as ACheckBox;
+            checkbox.Select(false);
         }
 
         #endregion
@@ -192,6 +231,12 @@ namespace AT_Core_Specflow.Core
             {
                 DriverFactory.MakeScreenshot();
                 throw ex.GetBaseException();
+            }
+
+            public static Actions Actions()
+            {
+                var actions = new Actions(DriverFactory.GetDriver());
+                return actions;
             }
         }
         #endregion

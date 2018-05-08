@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
-using AT_Core_Specflow.Extensions.WaitExtensions.Interfaces;
+using OpenQA.Selenium;
 
 namespace AT_Core_Specflow.Extensions.WaitExtensions
 {
@@ -23,6 +25,7 @@ namespace AT_Core_Specflow.Extensions.WaitExtensions
 
         public TResult Until<TResult>(Func<T, TResult> func)
         {
+            var callerMethodName = new StackTrace().GetFrame(1).GetMethod().Name;
             var resultType = typeof(TResult);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -45,6 +48,7 @@ namespace AT_Core_Specflow.Extensions.WaitExtensions
                 }
                 catch (Exception)
                 {
+                    if (callerMethodName != MethodBase.GetCurrentMethod().Name) throw;
                     Thread.Sleep(500);
                 }
             }
